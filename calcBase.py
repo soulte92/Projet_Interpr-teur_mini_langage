@@ -17,7 +17,7 @@ tokens = ['NUMBER','MINUS',
     'PLUS','TIMES','DIVIDE',
     'LPAREN','RPAREN', 'AND', 'OR',
     'TRUE','FALSE', 'SEMICOLON', 'NAME',
-    'AFFECT', 'INF', 'SUP', 'LACCOLADE', 'RACCOLADE']
+    'AFFECT', 'INF', 'SUP', 'EQUALS' , 'LACCOLADE', 'RACCOLADE']
 
 tokens = tokens + list(reserved.values())
 
@@ -26,9 +26,6 @@ precedence = (
     ('left','TIMES','DIVIDE')
     )       
 
-
-#Variables
-names = {}
 
 # Tokens
 t_PLUS      = r'\+'
@@ -45,6 +42,7 @@ t_FALSE     = r'F'
 t_TRUE      = r'T'
 t_SEMICOLON = r';'
 t_AFFECT    = r'='
+t_EQUALS    = r'=='
 t_INF       = r'<'
 t_SUP       = r'>'
 
@@ -81,7 +79,7 @@ def p_start(p):
     'start : bloc'
     p[0] = ('START',p[1])
     print('Arbre de dérivation = ',p[1])
-    printTreeGraph(p[1])
+    printTreeGraph(p[1])                                                                                                                                                                                                                                                                                               
     print('CALC> ',uf.eval_Inst(p[1]))
 
 #Excution des bloc ( soit print, soit affect pour le moment)
@@ -102,7 +100,6 @@ def p_print(p):
 #Fait un une affection d'une expression dans une variable
 def p_affect(p):
     'statement : NAME AFFECT expression'
-    names[p[1]] = p[3]
     p[0] = ('affect',p[1], p[3])
  
 
@@ -115,7 +112,7 @@ def p_boucle_while(p):
     p[0] = ('while', p[3], p[6])    
 
 def p_boucle_for(p):
-    '''statement : FOR LPAREN expression SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE'''
+    '''statement : FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE'''
     p[0] = ('for', p[3], p[5], p[7], p[10])       
 
 #Opération
@@ -150,7 +147,11 @@ def p_expression_binop_comparison(p):
         p[0] = ('<', p[1] , p[3])
     else : 	
         p[0] = ('>', p[1] , p[3])
-    
+
+def p_expression_binop_equals(p):
+    '''expression : expression EQUALS expression'''
+    p[0] = ('==', p[1] , p[3])
+
 #Element terminaux    
 def p_expression_group(p):
     'expression : LPAREN expression RPAREN'
@@ -162,10 +163,7 @@ def p_expression_number(p):
 
 def p_expression_name(p):
     'expression : NAME'
-    # p[0] = names[p[1]]
-    # p[0] = (p[1], names[p[1]])
-    p[0] = names[p[1]]
-    #p[0] = p[1]
+    p[0] = p[1]
     
 def p_expression_true(p):
     'expression : TRUE'
@@ -186,8 +184,10 @@ yacc.yacc()
 # s = 'print(1+2);a=2;print(a);'
 # s='print(1+2);x=4;x=x+1;print(x);'
 #s = 'if(2<4){print(2*3);print(3);};'
-#s = 'x=1;x=x+1;print(x);'
-s = 'x=2;while(x<5){print(x);x=x+1;};'
+#s = 'x=1;print(x);'
+#s = 'x=1;x=x+1;x=x+1;print(x);'
+# s = 'x=2;while(x<5){x=x+1;print(x);};'
+s = 'for(x=0;x<11;x=x+1){print(x;);};'
 #s = 'while(5){print(1);};'
 # s = 'x=5;while(x<8){print(2+9);};'
 #s = 'x=1+2;print(x);'
