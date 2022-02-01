@@ -23,6 +23,8 @@ def eval_Expr(t):
             return eval_Expr(t[1]) < eval_Expr(t[2])
         elif t[0]== '>':
             return eval_Expr(t[1]) > eval_Expr(t[2])
+        elif t[0]== '==':
+            return eval_Expr(t[1]) > eval_Expr(t[2])
 
 def eval_Inst(t): 
     print("eval_Expr= ", t)       
@@ -47,8 +49,8 @@ def eval_Inst(t):
     elif t[0] == 'for':
         eval_Inst(t[1])
         while bool(eval_Expr(t[2])) == True:
-            eval_Expr(t[3])
+            eval_Inst(t[3])
             eval_Inst(t[4]) 
 
-    elif t[0] in ['+', '-', '*', '/', '<', '>', '&', '|']:
-        return eval_Expr(t)        
+    # elif t[0] in ['+', '-', '*', '/', '<', '>', '&', '|']:
+    #     return eval_Expr(t)        

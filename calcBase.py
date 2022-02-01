@@ -112,7 +112,7 @@ def p_boucle_while(p):
     p[0] = ('while', p[3], p[6])    
 
 def p_boucle_for(p):
-    '''statement : FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE'''
+    '''statement : FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE'''
     p[0] = ('for', p[3], p[5], p[7], p[10])       
 
 #Opération
@@ -186,8 +186,9 @@ yacc.yacc()
 #s = 'if(2<4){print(2*3);print(3);};'
 #s = 'x=1;print(x);'
 #s = 'x=1;x=x+1;x=x+1;print(x);'
-# s = 'x=2;while(x<5){x=x+1;print(x);};'
-s = 'for(x=0;x<11;x=x+1){print(x;);};'
+#s = 'x=2;while(x<5){x=x+1;print(x);};'
+# s = 'for(x=0;x<11;x=x+1;){print(x);};'
+s = 'for(i=0; i<10; i=i+1){print(i);};'
 #s = 'while(5){print(1);};'
 # s = 'x=5;while(x<8){print(2+9);};'
 #s = 'x=1+2;print(x);'

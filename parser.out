@@ -10,7 +10,7 @@ Rule 4     statement -> PRINT LPAREN expression RPAREN
 Rule 5     statement -> NAME AFFECT expression
 Rule 6     statement -> IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
 Rule 7     statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-Rule 8     statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+Rule 8     statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 Rule 9     expression -> expression PLUS expression
 Rule 10    expression -> expression TIMES expression
 Rule 11    expression -> expression MINUS expression
@@ -56,9 +56,9 @@ error                :
 Nonterminals, with rules where they appear
 
 bloc                 : 1 2 6 7 8
-expression           : 4 5 6 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 17 18
+expression           : 4 5 6 7 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 17 18
 start                : 0
-statement            : 2 3 8
+statement            : 2 3 8 8
 
 Parsing method: LALR
 
@@ -72,7 +72,7 @@ state 0
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
@@ -98,7 +98,7 @@ state 2
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     $end            reduce using rule 1 (start -> bloc .)
     PRINT           shift and go to state 4
@@ -146,7 +146,7 @@ state 7
 
 state 8
 
-    (8) statement -> FOR . LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> FOR . LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     LPAREN          shift and go to state 15
 
@@ -277,12 +277,12 @@ state 14
 
 state 15
 
-    (8) statement -> FOR LPAREN . statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> FOR LPAREN . statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
     (4) statement -> . PRINT LPAREN expression RPAREN
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
@@ -438,6 +438,7 @@ state 23
     (17) expression -> expression . EQUALS expression
 
     SEMICOLON       reduce using rule 5 (statement -> NAME AFFECT expression .)
+    RPAREN          reduce using rule 5 (statement -> NAME AFFECT expression .)
     PLUS            shift and go to state 29
     TIMES           shift and go to state 30
     MINUS           shift and go to state 31
@@ -501,7 +502,7 @@ state 25
 
 state 26
 
-    (8) statement -> FOR LPAREN statement . SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> FOR LPAREN statement . SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     SEMICOLON       shift and go to state 40
 
@@ -536,6 +537,7 @@ state 28
     (4) statement -> PRINT LPAREN expression RPAREN .
 
     SEMICOLON       reduce using rule 4 (statement -> PRINT LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 4 (statement -> PRINT LPAREN expression RPAREN .)
 
 
 state 29
@@ -788,7 +790,7 @@ state 39
 
 state 40
 
-    (8) statement -> FOR LPAREN statement SEMICOLON . expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> FOR LPAREN statement SEMICOLON . expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
     (9) expression -> . expression PLUS expression
     (10) expression -> . expression TIMES expression
     (11) expression -> . expression MINUS expression
@@ -1207,7 +1209,7 @@ state 51
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
@@ -1227,7 +1229,7 @@ state 52
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
@@ -1240,7 +1242,7 @@ state 52
 
 state 53
 
-    (8) statement -> FOR LPAREN statement SEMICOLON expression . SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> FOR LPAREN statement SEMICOLON expression . SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
     (9) expression -> expression . PLUS expression
     (10) expression -> expression . TIMES expression
     (11) expression -> expression . MINUS expression
@@ -1271,7 +1273,7 @@ state 54
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     RACCOLADE       shift and go to state 57
     PRINT           shift and go to state 4
@@ -1290,7 +1292,7 @@ state 55
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     RACCOLADE       shift and go to state 58
     PRINT           shift and go to state 4
@@ -1303,35 +1305,27 @@ state 55
 
 state 56
 
-    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON . expression RPAREN LACCOLADE bloc RACCOLADE
-    (9) expression -> . expression PLUS expression
-    (10) expression -> . expression TIMES expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression DIVIDE expression
-    (13) expression -> . expression AND expression
-    (14) expression -> . expression OR expression
-    (15) expression -> . expression INF expression
-    (16) expression -> . expression SUP expression
-    (17) expression -> . expression EQUALS expression
-    (18) expression -> . LPAREN expression RPAREN
-    (19) expression -> . NUMBER
-    (20) expression -> . NAME
-    (21) expression -> . TRUE
-    (22) expression -> . FALSE
+    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON . statement RPAREN LACCOLADE bloc RACCOLADE
+    (4) statement -> . PRINT LPAREN expression RPAREN
+    (5) statement -> . NAME AFFECT expression
+    (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
-    LPAREN          shift and go to state 17
-    NUMBER          shift and go to state 19
-    NAME            shift and go to state 20
-    TRUE            shift and go to state 21
-    FALSE           shift and go to state 22
+    PRINT           shift and go to state 4
+    NAME            shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+    FOR             shift and go to state 8
 
-    expression                     shift and go to state 59
+    statement                      shift and go to state 59
 
 state 57
 
     (6) statement -> IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .
 
     SEMICOLON       reduce using rule 6 (statement -> IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .)
+    RPAREN          reduce using rule 6 (statement -> IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .)
 
 
 state 58
@@ -1339,50 +1333,33 @@ state 58
     (7) statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .
 
     SEMICOLON       reduce using rule 7 (statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .)
+    RPAREN          reduce using rule 7 (statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .)
 
 
 state 59
 
-    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON expression . RPAREN LACCOLADE bloc RACCOLADE
-    (9) expression -> expression . PLUS expression
-    (10) expression -> expression . TIMES expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . DIVIDE expression
-    (13) expression -> expression . AND expression
-    (14) expression -> expression . OR expression
-    (15) expression -> expression . INF expression
-    (16) expression -> expression . SUP expression
-    (17) expression -> expression . EQUALS expression
+    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement . RPAREN LACCOLADE bloc RACCOLADE
 
     RPAREN          shift and go to state 60
-    PLUS            shift and go to state 29
-    TIMES           shift and go to state 30
-    MINUS           shift and go to state 31
-    DIVIDE          shift and go to state 32
-    AND             shift and go to state 33
-    OR              shift and go to state 34
-    INF             shift and go to state 35
-    SUP             shift and go to state 36
-    EQUALS          shift and go to state 37
 
 
 state 60
 
-    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN . LACCOLADE bloc RACCOLADE
+    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN . LACCOLADE bloc RACCOLADE
 
     LACCOLADE       shift and go to state 61
 
 
 state 61
 
-    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE . bloc RACCOLADE
+    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE . bloc RACCOLADE
     (2) bloc -> . bloc statement SEMICOLON
     (3) bloc -> . statement SEMICOLON
     (4) statement -> . PRINT LPAREN expression RPAREN
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
@@ -1395,13 +1372,13 @@ state 61
 
 state 62
 
-    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc . RACCOLADE
+    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc . RACCOLADE
     (2) bloc -> bloc . statement SEMICOLON
     (4) statement -> . PRINT LPAREN expression RPAREN
     (5) statement -> . NAME AFFECT expression
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
     RACCOLADE       shift and go to state 63
     PRINT           shift and go to state 4
@@ -1414,9 +1391,10 @@ state 62
 
 state 63
 
-    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE .
+    (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE .
 
-    SEMICOLON       reduce using rule 8 (statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON expression RPAREN LACCOLADE bloc RACCOLADE .)
+    SEMICOLON       reduce using rule 8 (statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE .)
+    RPAREN          reduce using rule 8 (statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE .)
 
 WARNING: 
 WARNING: Conflicts:
