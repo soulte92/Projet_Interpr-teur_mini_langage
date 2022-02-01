@@ -1,4 +1,5 @@
 names = {}
+functions = {}
 
 def eval_Expr(t):
     if type(t) is int :
@@ -51,6 +52,15 @@ def eval_Inst(t):
         while bool(eval_Expr(t[2])) == True:
             eval_Inst(t[3])
             eval_Inst(t[4]) 
+
+    elif t[0] == 'function':
+        functions[t[1]] = ('empty',t[2]) 
+        print(functions)
+
+    elif t[0] == 'call':
+        eval_Inst(functions[t[1]][1])    
+
+         
 
     # elif t[0] in ['+', '-', '*', '/', '<', '>', '&', '|']:
     #     return eval_Expr(t)        

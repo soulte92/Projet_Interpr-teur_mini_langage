@@ -17,7 +17,7 @@ tokens = ['NUMBER','MINUS',
     'PLUS','TIMES','DIVIDE',
     'LPAREN','RPAREN', 'AND', 'OR',
     'TRUE','FALSE', 'SEMICOLON', 'NAME',
-    'AFFECT', 'INF', 'SUP', 'EQUALS' , 'LACCOLADE', 'RACCOLADE']
+    'AFFECT', 'INF', 'SUP', 'EQUALS' , 'LACCOLADE', 'RACCOLADE', 'DECFUNC']
 
 tokens = tokens + list(reserved.values())
 
@@ -45,12 +45,18 @@ t_AFFECT    = r'='
 t_EQUALS    = r'=='
 t_INF       = r'<'
 t_SUP       = r'>'
+# t_DECFUNC   = r'function'
 
 import util_fonctions as uf
 
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'NAME')    # Check for reserved words
+    return t
+
+def t_DECFUNC(t):
+    r'function'
+    t.type = reserved.get(t.value,'DECFUNC')    # Check for reserved words
     return t
 
 def t_NUMBER(t):
@@ -101,7 +107,6 @@ def p_print(p):
 def p_affect(p):
     'statement : NAME AFFECT expression'
     p[0] = ('affect',p[1], p[3])
- 
 
 def p_condition_if(p):
     '''statement : IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE'''
@@ -113,7 +118,15 @@ def p_boucle_while(p):
 
 def p_boucle_for(p):
     '''statement : FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE'''
-    p[0] = ('for', p[3], p[5], p[7], p[10])       
+    p[0] = ('for', p[3], p[5], p[7], p[10]) 
+
+def p_function(p):
+    '''statement : NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE'''  
+    p[0] = ('function', p[1], p[5]) 
+
+def p_call_func(p):
+    '''statement : NAME LPAREN RPAREN''' 
+    p[0] = ('call', p[1])   
 
 #Opération
 def p_expression_binop_plus(p):
@@ -188,7 +201,10 @@ yacc.yacc()
 #s = 'x=1;x=x+1;x=x+1;print(x);'
 #s = 'x=2;while(x<5){x=x+1;print(x);};'
 # s = 'for(x=0;x<11;x=x+1;){print(x);};'
-s = 'for(i=0; i<10; i=i+1){print(i);};'
+# s = 'for(i=0; i<10; i=i+1){print(i);};'
+# s = 'carre(){print(2);};for(i=0;i<3;i=i+1){carre();};'
+
+s='carre(){print(2);};for(i=0;i<10;i=i+1){carre();};'
 #s = 'while(5){print(1);};'
 # s = 'x=5;while(x<8){print(2+9);};'
 #s = 'x=1+2;print(x);'
