@@ -11,13 +11,15 @@ reserved = {
     'if' : 'IF',
     'while' : 'WHILE',
     'for' : 'FOR',
+    'function' : 'FUNCTION'
 }
 
 tokens = ['NUMBER','MINUS',
     'PLUS','TIMES','DIVIDE',
     'LPAREN','RPAREN', 'AND', 'OR',
     'TRUE','FALSE', 'SEMICOLON', 'NAME',
-    'AFFECT', 'INF', 'SUP', 'EQUALS' , 'LACCOLADE', 'RACCOLADE', 'DECFUNC']
+    'AFFECT', 'INF', 'SUP', 'EQUALS' , 'LACCOLADE', 'RACCOLADE', 'DECFUNC',
+    'VIRG' ]
 
 tokens = tokens + list(reserved.values())
 
@@ -45,7 +47,7 @@ t_AFFECT    = r'='
 t_EQUALS    = r'=='
 t_INF       = r'<'
 t_SUP       = r'>'
-# t_DECFUNC   = r'function'
+t_VIRG       = r','
 
 import util_fonctions as uf
 
@@ -120,13 +122,38 @@ def p_boucle_for(p):
     '''statement : FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE'''
     p[0] = ('for', p[3], p[5], p[7], p[10]) 
 
+def p_mutiple_names(p):
+    '''multiname : NAME VIRG multiname
+    | NAME'''
+    if len(p) == 4:
+        p[0] = ('multiname', p[1], p[3])
+    else:
+        p[0] = ('multiname', p[1])
+
+def p_multiExpr_names(p):
+    '''multiExpr : expression VIRG multiExpr
+    | expression'''
+    if len(p) == 4:
+        p[0] = ('multiExpr', p[1], p[3])
+    else:
+        p[0] = ('multiExpr', p[1])
+
 def p_function(p):
-    '''statement : NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE'''  
-    p[0] = ('function', p[1], p[5]) 
+    '''statement : FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    | FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE'''  
+    if len(p) == 7:
+        p[0] = ('function', p[2], p[6])
+    else:
+        p[0] = ('function', p[2], p[4], p[7])
 
 def p_call_func(p):
     '''statement : NAME LPAREN RPAREN''' 
-    p[0] = ('call', p[1])   
+    p[0] = ('call', p[1], 'Empty')
+
+def p_call_param_func(p):
+    '''statement : NAME LPAREN multiExpr RPAREN''' 
+    if len(p) == 5:
+        p[0] = ('callParam', p[1], p[3])    
 
 #Opération
 def p_expression_binop_plus(p):
@@ -202,9 +229,15 @@ yacc.yacc()
 #s = 'x=2;while(x<5){x=x+1;print(x);};'
 # s = 'for(x=0;x<11;x=x+1;){print(x);};'
 # s = 'for(i=0; i<10; i=i+1){print(i);};'
-# s = 'carre(){print(2);};for(i=0;i<3;i=i+1){carre();};'
-
-s='carre(){print(2);};for(i=0;i<10;i=i+1){carre();};'
+s = 'function carre(a,b){print(a*b);};for(i=0;i<5;i=i+1){print(i);carre(i,i);};'
+# s = 'a=2;print(a*a);'
+# s = 'carre(a){print(a);};carre(2);'
+# s = 'carre(a,b){a=1;b=2;print(a+b);};carre(2,1);'
+# s = 'carre();'
+# s = 'carre(a,b);'
+# s = 'carre(a){a=2;print(a);};carre(1);'
+# s = 'carre(a){a=2;print(a);};carre(1);'
+# s='carre(){print(2);};for(i=0;i<10;i=i+1){carre();};'
 #s = 'while(5){print(1);};'
 # s = 'x=5;while(x<8){print(2+9);};'
 #s = 'x=1+2;print(x);'

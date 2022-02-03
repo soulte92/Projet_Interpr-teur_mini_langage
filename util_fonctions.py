@@ -34,10 +34,22 @@ def eval_Inst(t):
     elif t[0] == 'bloc':
         eval_Inst(t[1])
         eval_Inst(t[2])
+
     elif t[0] == 'print':
-        print('calc >',eval_Expr(t[1]))
+        print('print >',eval_Expr(t[1]))
+
     elif t[0] == 'affect':
         names[t[1]] = eval_Expr(t[2])
+
+    elif t[0] == 'multiname':
+        #on vient de function
+        if len(t) == 3:
+            #multiple param
+            eval_Inst(t[2])
+            names[t[2]] = None
+        else:
+            #sans param
+            names[t[1]] = None    
 
     elif t[0] == 'if':
         if eval_Expr(t[1]):
@@ -54,13 +66,32 @@ def eval_Inst(t):
             eval_Inst(t[4]) 
 
     elif t[0] == 'function':
-        functions[t[1]] = ('empty',t[2]) 
-        print(functions)
+        if len(t) == 3:
+            #sans param
+            functions[t[1]] = ('Empty',t[2]) 
+        else:
+            #avec param
+            functions[t[1]] = (t[2],t[3]) 
+            eval_Inst(t[2])
 
     elif t[0] == 'call':
-        eval_Inst(functions[t[1]][1])    
+        eval_Inst(functions[t[1]][1])
+
+    elif t[0] == 'callParam':
+        #Les instructions de la function
+        our_function = functions[t[1]][1]
+        #Les paramètres de la function
+        p = functions[t[1]][0]
+        while len(t[2])!= 1 and len(p)!=1:
+            # print("avant = ",names)
+            if len(p) == 2 and len(t[2]) == 2:
+                names[p[1]] = eval_Expr(t[2][1])
+                eval_Inst(our_function)
+                break
+            elif len(p) == len(t[2]) and len(p)>=3:
+            # print("après = ",names)
+                names[p[1]] = eval_Expr(t[2][1])
+                t = t[2]
+                p = p[2]
 
          
-
-    # elif t[0] in ['+', '-', '*', '/', '<', '>', '&', '|']:
-    #     return eval_Expr(t)        

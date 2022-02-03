@@ -15,55 +15,65 @@ Rule 5     statement -> NAME AFFECT expression
 Rule 6     statement -> IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
 Rule 7     statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
 Rule 8     statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-Rule 9     statement -> NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-Rule 10    statement -> NAME LPAREN RPAREN
-Rule 11    expression -> expression PLUS expression
-Rule 12    expression -> expression TIMES expression
-Rule 13    expression -> expression MINUS expression
-Rule 14    expression -> expression DIVIDE expression
-Rule 15    expression -> expression AND expression
-Rule 16    expression -> expression OR expression
-Rule 17    expression -> expression INF expression
-Rule 18    expression -> expression SUP expression
-Rule 19    expression -> expression EQUALS expression
-Rule 20    expression -> LPAREN expression RPAREN
-Rule 21    expression -> NUMBER
-Rule 22    expression -> NAME
-Rule 23    expression -> TRUE
-Rule 24    expression -> FALSE
+Rule 9     multiname -> NAME VIRG multiname
+Rule 10    multiname -> NAME
+Rule 11    multiExpr -> expression VIRG multiExpr
+Rule 12    multiExpr -> expression
+Rule 13    statement -> FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+Rule 14    statement -> FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+Rule 15    statement -> NAME LPAREN RPAREN
+Rule 16    statement -> NAME LPAREN multiExpr RPAREN
+Rule 17    expression -> expression PLUS expression
+Rule 18    expression -> expression TIMES expression
+Rule 19    expression -> expression MINUS expression
+Rule 20    expression -> expression DIVIDE expression
+Rule 21    expression -> expression AND expression
+Rule 22    expression -> expression OR expression
+Rule 23    expression -> expression INF expression
+Rule 24    expression -> expression SUP expression
+Rule 25    expression -> expression EQUALS expression
+Rule 26    expression -> LPAREN expression RPAREN
+Rule 27    expression -> NUMBER
+Rule 28    expression -> NAME
+Rule 29    expression -> TRUE
+Rule 30    expression -> FALSE
 
 Terminals, with rules where they appear
 
 AFFECT               : 5
-AND                  : 15
+AND                  : 21
 DECFUNC              : 
-DIVIDE               : 14
-EQUALS               : 19
-FALSE                : 24
+DIVIDE               : 20
+EQUALS               : 25
+FALSE                : 30
 FOR                  : 8
+FUNCTION             : 13 14
 IF                   : 6
-INF                  : 17
-LACCOLADE            : 6 7 8 9
-LPAREN               : 4 6 7 8 9 10 20
-MINUS                : 13
-NAME                 : 5 9 10 22
-NUMBER               : 21
-OR                   : 16
-PLUS                 : 11
+INF                  : 23
+LACCOLADE            : 6 7 8 13 14
+LPAREN               : 4 6 7 8 13 14 15 16 26
+MINUS                : 19
+NAME                 : 5 9 10 13 14 15 16 28
+NUMBER               : 27
+OR                   : 22
+PLUS                 : 17
 PRINT                : 4
-RACCOLADE            : 6 7 8 9
-RPAREN               : 4 6 7 8 9 10 20
+RACCOLADE            : 6 7 8 13 14
+RPAREN               : 4 6 7 8 13 14 15 16 26
 SEMICOLON            : 2 3 8 8
-SUP                  : 18
-TIMES                : 12
-TRUE                 : 23
+SUP                  : 24
+TIMES                : 18
+TRUE                 : 29
+VIRG                 : 9 11
 WHILE                : 7
 error                : 
 
 Nonterminals, with rules where they appear
 
-bloc                 : 1 2 6 7 8 9
-expression           : 4 5 6 7 8 11 11 12 12 13 13 14 14 15 15 16 16 17 17 18 18 19 19 20
+bloc                 : 1 2 6 7 8 13 14
+expression           : 4 5 6 7 8 11 12 17 17 18 18 19 19 20 20 21 21 22 22 23 23 24 24 25 25 26
+multiExpr            : 11 16
+multiname            : 9 14
 start                : 0
 statement            : 2 3 8 8
 
@@ -80,14 +90,17 @@ state 0
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
     start                          shift and go to state 1
     bloc                           shift and go to state 2
@@ -108,8 +121,10 @@ state 2
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
     $end            reduce using rule 1 (start -> bloc .)
     PRINT           shift and go to state 4
@@ -117,62 +132,71 @@ state 2
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    statement                      shift and go to state 9
+    statement                      shift and go to state 10
 
 state 3
 
     (3) bloc -> statement . SEMICOLON
 
-    SEMICOLON       shift and go to state 10
+    SEMICOLON       shift and go to state 11
 
 
 state 4
 
     (4) statement -> PRINT . LPAREN expression RPAREN
 
-    LPAREN          shift and go to state 11
+    LPAREN          shift and go to state 12
 
 
 state 5
 
     (5) statement -> NAME . AFFECT expression
-    (9) statement -> NAME . LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> NAME . LPAREN RPAREN
+    (15) statement -> NAME . LPAREN RPAREN
+    (16) statement -> NAME . LPAREN multiExpr RPAREN
 
-    AFFECT          shift and go to state 12
-    LPAREN          shift and go to state 13
+    AFFECT          shift and go to state 13
+    LPAREN          shift and go to state 14
 
 
 state 6
 
     (6) statement -> IF . LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
 
-    LPAREN          shift and go to state 14
+    LPAREN          shift and go to state 15
 
 
 state 7
 
     (7) statement -> WHILE . LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
 
-    LPAREN          shift and go to state 15
+    LPAREN          shift and go to state 16
 
 
 state 8
 
     (8) statement -> FOR . LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
 
-    LPAREN          shift and go to state 16
+    LPAREN          shift and go to state 17
 
 
 state 9
 
-    (2) bloc -> bloc statement . SEMICOLON
+    (13) statement -> FUNCTION . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> FUNCTION . NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
 
-    SEMICOLON       shift and go to state 17
+    NAME            shift and go to state 18
 
 
 state 10
+
+    (2) bloc -> bloc statement . SEMICOLON
+
+    SEMICOLON       shift and go to state 19
+
+
+state 11
 
     (3) bloc -> statement SEMICOLON .
 
@@ -181,123 +205,147 @@ state 10
     IF              reduce using rule 3 (bloc -> statement SEMICOLON .)
     WHILE           reduce using rule 3 (bloc -> statement SEMICOLON .)
     FOR             reduce using rule 3 (bloc -> statement SEMICOLON .)
+    FUNCTION        reduce using rule 3 (bloc -> statement SEMICOLON .)
     $end            reduce using rule 3 (bloc -> statement SEMICOLON .)
     RACCOLADE       reduce using rule 3 (bloc -> statement SEMICOLON .)
 
 
-state 11
-
-    (4) statement -> PRINT LPAREN . expression RPAREN
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 19
-
 state 12
 
-    (5) statement -> NAME AFFECT . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
+    (4) statement -> PRINT LPAREN . expression RPAREN
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
-    expression                     shift and go to state 24
+    expression                     shift and go to state 21
 
 state 13
 
-    (9) statement -> NAME LPAREN . RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> NAME LPAREN . RPAREN
+    (5) statement -> NAME AFFECT . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    RPAREN          shift and go to state 25
-
-
-state 14
-
-    (6) statement -> IF LPAREN . expression RPAREN LACCOLADE bloc RACCOLADE
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
     expression                     shift and go to state 26
 
+state 14
+
+    (15) statement -> NAME LPAREN . RPAREN
+    (16) statement -> NAME LPAREN . multiExpr RPAREN
+    (11) multiExpr -> . expression VIRG multiExpr
+    (12) multiExpr -> . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
+
+    RPAREN          shift and go to state 27
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
+
+    multiExpr                      shift and go to state 28
+    expression                     shift and go to state 29
+
 state 15
 
-    (7) statement -> WHILE LPAREN . expression RPAREN LACCOLADE bloc RACCOLADE
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
+    (6) statement -> IF LPAREN . expression RPAREN LACCOLADE bloc RACCOLADE
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
-    expression                     shift and go to state 27
+    expression                     shift and go to state 30
 
 state 16
+
+    (7) statement -> WHILE LPAREN . expression RPAREN LACCOLADE bloc RACCOLADE
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
+
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
+
+    expression                     shift and go to state 31
+
+state 17
 
     (8) statement -> FOR LPAREN . statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
     (4) statement -> . PRINT LPAREN expression RPAREN
@@ -305,18 +353,29 @@ state 16
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    statement                      shift and go to state 28
+    statement                      shift and go to state 32
 
-state 17
+state 18
+
+    (13) statement -> FUNCTION NAME . LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> FUNCTION NAME . LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+
+    LPAREN          shift and go to state 33
+
+
+state 19
 
     (2) bloc -> bloc statement SEMICOLON .
 
@@ -325,248 +384,297 @@ state 17
     IF              reduce using rule 2 (bloc -> bloc statement SEMICOLON .)
     WHILE           reduce using rule 2 (bloc -> bloc statement SEMICOLON .)
     FOR             reduce using rule 2 (bloc -> bloc statement SEMICOLON .)
+    FUNCTION        reduce using rule 2 (bloc -> bloc statement SEMICOLON .)
     $end            reduce using rule 2 (bloc -> bloc statement SEMICOLON .)
     RACCOLADE       reduce using rule 2 (bloc -> bloc statement SEMICOLON .)
 
 
-state 18
-
-    (20) expression -> LPAREN . expression RPAREN
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 29
-
-state 19
-
-    (4) statement -> PRINT LPAREN expression . RPAREN
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
-
-    RPAREN          shift and go to state 30
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
-
-
 state 20
 
-    (21) expression -> NUMBER .
+    (26) expression -> LPAREN . expression RPAREN
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    RPAREN          reduce using rule 21 (expression -> NUMBER .)
-    PLUS            reduce using rule 21 (expression -> NUMBER .)
-    TIMES           reduce using rule 21 (expression -> NUMBER .)
-    MINUS           reduce using rule 21 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 21 (expression -> NUMBER .)
-    AND             reduce using rule 21 (expression -> NUMBER .)
-    OR              reduce using rule 21 (expression -> NUMBER .)
-    INF             reduce using rule 21 (expression -> NUMBER .)
-    SUP             reduce using rule 21 (expression -> NUMBER .)
-    EQUALS          reduce using rule 21 (expression -> NUMBER .)
-    SEMICOLON       reduce using rule 21 (expression -> NUMBER .)
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
+    expression                     shift and go to state 34
 
 state 21
 
-    (22) expression -> NAME .
+    (4) statement -> PRINT LPAREN expression . RPAREN
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
 
-    RPAREN          reduce using rule 22 (expression -> NAME .)
-    PLUS            reduce using rule 22 (expression -> NAME .)
-    TIMES           reduce using rule 22 (expression -> NAME .)
-    MINUS           reduce using rule 22 (expression -> NAME .)
-    DIVIDE          reduce using rule 22 (expression -> NAME .)
-    AND             reduce using rule 22 (expression -> NAME .)
-    OR              reduce using rule 22 (expression -> NAME .)
-    INF             reduce using rule 22 (expression -> NAME .)
-    SUP             reduce using rule 22 (expression -> NAME .)
-    EQUALS          reduce using rule 22 (expression -> NAME .)
-    SEMICOLON       reduce using rule 22 (expression -> NAME .)
+    RPAREN          shift and go to state 35
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
 
 
 state 22
 
-    (23) expression -> TRUE .
+    (27) expression -> NUMBER .
 
-    RPAREN          reduce using rule 23 (expression -> TRUE .)
-    PLUS            reduce using rule 23 (expression -> TRUE .)
-    TIMES           reduce using rule 23 (expression -> TRUE .)
-    MINUS           reduce using rule 23 (expression -> TRUE .)
-    DIVIDE          reduce using rule 23 (expression -> TRUE .)
-    AND             reduce using rule 23 (expression -> TRUE .)
-    OR              reduce using rule 23 (expression -> TRUE .)
-    INF             reduce using rule 23 (expression -> TRUE .)
-    SUP             reduce using rule 23 (expression -> TRUE .)
-    EQUALS          reduce using rule 23 (expression -> TRUE .)
-    SEMICOLON       reduce using rule 23 (expression -> TRUE .)
+    RPAREN          reduce using rule 27 (expression -> NUMBER .)
+    PLUS            reduce using rule 27 (expression -> NUMBER .)
+    TIMES           reduce using rule 27 (expression -> NUMBER .)
+    MINUS           reduce using rule 27 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 27 (expression -> NUMBER .)
+    AND             reduce using rule 27 (expression -> NUMBER .)
+    OR              reduce using rule 27 (expression -> NUMBER .)
+    INF             reduce using rule 27 (expression -> NUMBER .)
+    SUP             reduce using rule 27 (expression -> NUMBER .)
+    EQUALS          reduce using rule 27 (expression -> NUMBER .)
+    SEMICOLON       reduce using rule 27 (expression -> NUMBER .)
+    VIRG            reduce using rule 27 (expression -> NUMBER .)
 
 
 state 23
 
-    (24) expression -> FALSE .
+    (28) expression -> NAME .
 
-    RPAREN          reduce using rule 24 (expression -> FALSE .)
-    PLUS            reduce using rule 24 (expression -> FALSE .)
-    TIMES           reduce using rule 24 (expression -> FALSE .)
-    MINUS           reduce using rule 24 (expression -> FALSE .)
-    DIVIDE          reduce using rule 24 (expression -> FALSE .)
-    AND             reduce using rule 24 (expression -> FALSE .)
-    OR              reduce using rule 24 (expression -> FALSE .)
-    INF             reduce using rule 24 (expression -> FALSE .)
-    SUP             reduce using rule 24 (expression -> FALSE .)
-    EQUALS          reduce using rule 24 (expression -> FALSE .)
-    SEMICOLON       reduce using rule 24 (expression -> FALSE .)
+    RPAREN          reduce using rule 28 (expression -> NAME .)
+    PLUS            reduce using rule 28 (expression -> NAME .)
+    TIMES           reduce using rule 28 (expression -> NAME .)
+    MINUS           reduce using rule 28 (expression -> NAME .)
+    DIVIDE          reduce using rule 28 (expression -> NAME .)
+    AND             reduce using rule 28 (expression -> NAME .)
+    OR              reduce using rule 28 (expression -> NAME .)
+    INF             reduce using rule 28 (expression -> NAME .)
+    SUP             reduce using rule 28 (expression -> NAME .)
+    EQUALS          reduce using rule 28 (expression -> NAME .)
+    SEMICOLON       reduce using rule 28 (expression -> NAME .)
+    VIRG            reduce using rule 28 (expression -> NAME .)
 
 
 state 24
 
-    (5) statement -> NAME AFFECT expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (29) expression -> TRUE .
 
-    SEMICOLON       reduce using rule 5 (statement -> NAME AFFECT expression .)
-    RPAREN          reduce using rule 5 (statement -> NAME AFFECT expression .)
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
+    RPAREN          reduce using rule 29 (expression -> TRUE .)
+    PLUS            reduce using rule 29 (expression -> TRUE .)
+    TIMES           reduce using rule 29 (expression -> TRUE .)
+    MINUS           reduce using rule 29 (expression -> TRUE .)
+    DIVIDE          reduce using rule 29 (expression -> TRUE .)
+    AND             reduce using rule 29 (expression -> TRUE .)
+    OR              reduce using rule 29 (expression -> TRUE .)
+    INF             reduce using rule 29 (expression -> TRUE .)
+    SUP             reduce using rule 29 (expression -> TRUE .)
+    EQUALS          reduce using rule 29 (expression -> TRUE .)
+    SEMICOLON       reduce using rule 29 (expression -> TRUE .)
+    VIRG            reduce using rule 29 (expression -> TRUE .)
 
 
 state 25
 
-    (9) statement -> NAME LPAREN RPAREN . LACCOLADE bloc RACCOLADE
-    (10) statement -> NAME LPAREN RPAREN .
+    (30) expression -> FALSE .
 
-    LACCOLADE       shift and go to state 40
-    SEMICOLON       reduce using rule 10 (statement -> NAME LPAREN RPAREN .)
-    RPAREN          reduce using rule 10 (statement -> NAME LPAREN RPAREN .)
+    RPAREN          reduce using rule 30 (expression -> FALSE .)
+    PLUS            reduce using rule 30 (expression -> FALSE .)
+    TIMES           reduce using rule 30 (expression -> FALSE .)
+    MINUS           reduce using rule 30 (expression -> FALSE .)
+    DIVIDE          reduce using rule 30 (expression -> FALSE .)
+    AND             reduce using rule 30 (expression -> FALSE .)
+    OR              reduce using rule 30 (expression -> FALSE .)
+    INF             reduce using rule 30 (expression -> FALSE .)
+    SUP             reduce using rule 30 (expression -> FALSE .)
+    EQUALS          reduce using rule 30 (expression -> FALSE .)
+    SEMICOLON       reduce using rule 30 (expression -> FALSE .)
+    VIRG            reduce using rule 30 (expression -> FALSE .)
 
 
 state 26
 
-    (6) statement -> IF LPAREN expression . RPAREN LACCOLADE bloc RACCOLADE
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (5) statement -> NAME AFFECT expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
 
-    RPAREN          shift and go to state 41
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
+    SEMICOLON       reduce using rule 5 (statement -> NAME AFFECT expression .)
+    RPAREN          reduce using rule 5 (statement -> NAME AFFECT expression .)
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
 
 
 state 27
 
-    (7) statement -> WHILE LPAREN expression . RPAREN LACCOLADE bloc RACCOLADE
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (15) statement -> NAME LPAREN RPAREN .
 
-    RPAREN          shift and go to state 42
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
+    SEMICOLON       reduce using rule 15 (statement -> NAME LPAREN RPAREN .)
+    RPAREN          reduce using rule 15 (statement -> NAME LPAREN RPAREN .)
 
 
 state 28
 
-    (8) statement -> FOR LPAREN statement . SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
+    (16) statement -> NAME LPAREN multiExpr . RPAREN
 
-    SEMICOLON       shift and go to state 43
+    RPAREN          shift and go to state 45
 
 
 state 29
 
-    (20) expression -> LPAREN expression . RPAREN
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (11) multiExpr -> expression . VIRG multiExpr
+    (12) multiExpr -> expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
 
-    RPAREN          shift and go to state 44
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
+    VIRG            shift and go to state 46
+    RPAREN          reduce using rule 12 (multiExpr -> expression .)
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
 
 
 state 30
+
+    (6) statement -> IF LPAREN expression . RPAREN LACCOLADE bloc RACCOLADE
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+    RPAREN          shift and go to state 47
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
+
+
+state 31
+
+    (7) statement -> WHILE LPAREN expression . RPAREN LACCOLADE bloc RACCOLADE
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+    RPAREN          shift and go to state 48
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
+
+
+state 32
+
+    (8) statement -> FOR LPAREN statement . SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
+
+    SEMICOLON       shift and go to state 49
+
+
+state 33
+
+    (13) statement -> FUNCTION NAME LPAREN . RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> FUNCTION NAME LPAREN . multiname RPAREN LACCOLADE bloc RACCOLADE
+    (9) multiname -> . NAME VIRG multiname
+    (10) multiname -> . NAME
+
+    RPAREN          shift and go to state 51
+    NAME            shift and go to state 50
+
+    multiname                      shift and go to state 52
+
+state 34
+
+    (26) expression -> LPAREN expression . RPAREN
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+    RPAREN          shift and go to state 53
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
+
+
+state 35
 
     (4) statement -> PRINT LPAREN expression RPAREN .
 
@@ -574,655 +682,518 @@ state 30
     RPAREN          reduce using rule 4 (statement -> PRINT LPAREN expression RPAREN .)
 
 
-state 31
-
-    (11) expression -> expression PLUS . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 45
-
-state 32
-
-    (12) expression -> expression TIMES . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 46
-
-state 33
-
-    (13) expression -> expression MINUS . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 47
-
-state 34
-
-    (14) expression -> expression DIVIDE . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 48
-
-state 35
-
-    (15) expression -> expression AND . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 49
-
 state 36
 
-    (16) expression -> expression OR . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
+    (17) expression -> expression PLUS . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
-    expression                     shift and go to state 50
+    expression                     shift and go to state 54
 
 state 37
 
-    (17) expression -> expression INF . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
+    (18) expression -> expression TIMES . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
-    expression                     shift and go to state 51
+    expression                     shift and go to state 55
 
 state 38
 
-    (18) expression -> expression SUP . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
+    (19) expression -> expression MINUS . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
-    expression                     shift and go to state 52
+    expression                     shift and go to state 56
 
 state 39
 
-    (19) expression -> expression EQUALS . expression
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
+    (20) expression -> expression DIVIDE . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
-
-    expression                     shift and go to state 53
-
-state 40
-
-    (9) statement -> NAME LPAREN RPAREN LACCOLADE . bloc RACCOLADE
-    (2) bloc -> . bloc statement SEMICOLON
-    (3) bloc -> . statement SEMICOLON
-    (4) statement -> . PRINT LPAREN expression RPAREN
-    (5) statement -> . NAME AFFECT expression
-    (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
-
-    PRINT           shift and go to state 4
-    NAME            shift and go to state 5
-    IF              shift and go to state 6
-    WHILE           shift and go to state 7
-    FOR             shift and go to state 8
-
-    bloc                           shift and go to state 54
-    statement                      shift and go to state 3
-
-state 41
-
-    (6) statement -> IF LPAREN expression RPAREN . LACCOLADE bloc RACCOLADE
-
-    LACCOLADE       shift and go to state 55
-
-
-state 42
-
-    (7) statement -> WHILE LPAREN expression RPAREN . LACCOLADE bloc RACCOLADE
-
-    LACCOLADE       shift and go to state 56
-
-
-state 43
-
-    (8) statement -> FOR LPAREN statement SEMICOLON . expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (11) expression -> . expression PLUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression MINUS expression
-    (14) expression -> . expression DIVIDE expression
-    (15) expression -> . expression AND expression
-    (16) expression -> . expression OR expression
-    (17) expression -> . expression INF expression
-    (18) expression -> . expression SUP expression
-    (19) expression -> . expression EQUALS expression
-    (20) expression -> . LPAREN expression RPAREN
-    (21) expression -> . NUMBER
-    (22) expression -> . NAME
-    (23) expression -> . TRUE
-    (24) expression -> . FALSE
-
-    LPAREN          shift and go to state 18
-    NUMBER          shift and go to state 20
-    NAME            shift and go to state 21
-    TRUE            shift and go to state 22
-    FALSE           shift and go to state 23
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
     expression                     shift and go to state 57
 
+state 40
+
+    (21) expression -> expression AND . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
+
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
+
+    expression                     shift and go to state 58
+
+state 41
+
+    (22) expression -> expression OR . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
+
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
+
+    expression                     shift and go to state 59
+
+state 42
+
+    (23) expression -> expression INF . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
+
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
+
+    expression                     shift and go to state 60
+
+state 43
+
+    (24) expression -> expression SUP . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
+
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
+
+    expression                     shift and go to state 61
+
 state 44
 
-    (20) expression -> LPAREN expression RPAREN .
+    (25) expression -> expression EQUALS . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    RPAREN          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    PLUS            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    TIMES           reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    AND             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    OR              reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    INF             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    SUP             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    EQUALS          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
-    SEMICOLON       reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
+    expression                     shift and go to state 62
 
 state 45
 
-    (11) expression -> expression PLUS expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (16) statement -> NAME LPAREN multiExpr RPAREN .
 
-    RPAREN          reduce using rule 11 (expression -> expression PLUS expression .)
-    PLUS            reduce using rule 11 (expression -> expression PLUS expression .)
-    MINUS           reduce using rule 11 (expression -> expression PLUS expression .)
-    AND             reduce using rule 11 (expression -> expression PLUS expression .)
-    OR              reduce using rule 11 (expression -> expression PLUS expression .)
-    INF             reduce using rule 11 (expression -> expression PLUS expression .)
-    SUP             reduce using rule 11 (expression -> expression PLUS expression .)
-    EQUALS          reduce using rule 11 (expression -> expression PLUS expression .)
-    SEMICOLON       reduce using rule 11 (expression -> expression PLUS expression .)
-    TIMES           shift and go to state 32
-    DIVIDE          shift and go to state 34
-
-  ! TIMES           [ reduce using rule 11 (expression -> expression PLUS expression .) ]
-  ! DIVIDE          [ reduce using rule 11 (expression -> expression PLUS expression .) ]
-  ! PLUS            [ shift and go to state 31 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! AND             [ shift and go to state 35 ]
-  ! OR              [ shift and go to state 36 ]
-  ! INF             [ shift and go to state 37 ]
-  ! SUP             [ shift and go to state 38 ]
-  ! EQUALS          [ shift and go to state 39 ]
+    SEMICOLON       reduce using rule 16 (statement -> NAME LPAREN multiExpr RPAREN .)
+    RPAREN          reduce using rule 16 (statement -> NAME LPAREN multiExpr RPAREN .)
 
 
 state 46
 
-    (12) expression -> expression TIMES expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (11) multiExpr -> expression VIRG . multiExpr
+    (11) multiExpr -> . expression VIRG multiExpr
+    (12) multiExpr -> . expression
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-    RPAREN          reduce using rule 12 (expression -> expression TIMES expression .)
-    PLUS            reduce using rule 12 (expression -> expression TIMES expression .)
-    TIMES           reduce using rule 12 (expression -> expression TIMES expression .)
-    MINUS           reduce using rule 12 (expression -> expression TIMES expression .)
-    DIVIDE          reduce using rule 12 (expression -> expression TIMES expression .)
-    AND             reduce using rule 12 (expression -> expression TIMES expression .)
-    OR              reduce using rule 12 (expression -> expression TIMES expression .)
-    INF             reduce using rule 12 (expression -> expression TIMES expression .)
-    SUP             reduce using rule 12 (expression -> expression TIMES expression .)
-    EQUALS          reduce using rule 12 (expression -> expression TIMES expression .)
-    SEMICOLON       reduce using rule 12 (expression -> expression TIMES expression .)
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
-  ! PLUS            [ shift and go to state 31 ]
-  ! TIMES           [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! DIVIDE          [ shift and go to state 34 ]
-  ! AND             [ shift and go to state 35 ]
-  ! OR              [ shift and go to state 36 ]
-  ! INF             [ shift and go to state 37 ]
-  ! SUP             [ shift and go to state 38 ]
-  ! EQUALS          [ shift and go to state 39 ]
-
+    expression                     shift and go to state 29
+    multiExpr                      shift and go to state 63
 
 state 47
 
-    (13) expression -> expression MINUS expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (6) statement -> IF LPAREN expression RPAREN . LACCOLADE bloc RACCOLADE
 
-    RPAREN          reduce using rule 13 (expression -> expression MINUS expression .)
-    PLUS            reduce using rule 13 (expression -> expression MINUS expression .)
-    MINUS           reduce using rule 13 (expression -> expression MINUS expression .)
-    AND             reduce using rule 13 (expression -> expression MINUS expression .)
-    OR              reduce using rule 13 (expression -> expression MINUS expression .)
-    INF             reduce using rule 13 (expression -> expression MINUS expression .)
-    SUP             reduce using rule 13 (expression -> expression MINUS expression .)
-    EQUALS          reduce using rule 13 (expression -> expression MINUS expression .)
-    SEMICOLON       reduce using rule 13 (expression -> expression MINUS expression .)
-    TIMES           shift and go to state 32
-    DIVIDE          shift and go to state 34
-
-  ! TIMES           [ reduce using rule 13 (expression -> expression MINUS expression .) ]
-  ! DIVIDE          [ reduce using rule 13 (expression -> expression MINUS expression .) ]
-  ! PLUS            [ shift and go to state 31 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! AND             [ shift and go to state 35 ]
-  ! OR              [ shift and go to state 36 ]
-  ! INF             [ shift and go to state 37 ]
-  ! SUP             [ shift and go to state 38 ]
-  ! EQUALS          [ shift and go to state 39 ]
+    LACCOLADE       shift and go to state 64
 
 
 state 48
 
-    (14) expression -> expression DIVIDE expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (7) statement -> WHILE LPAREN expression RPAREN . LACCOLADE bloc RACCOLADE
 
-    RPAREN          reduce using rule 14 (expression -> expression DIVIDE expression .)
-    PLUS            reduce using rule 14 (expression -> expression DIVIDE expression .)
-    TIMES           reduce using rule 14 (expression -> expression DIVIDE expression .)
-    MINUS           reduce using rule 14 (expression -> expression DIVIDE expression .)
-    DIVIDE          reduce using rule 14 (expression -> expression DIVIDE expression .)
-    AND             reduce using rule 14 (expression -> expression DIVIDE expression .)
-    OR              reduce using rule 14 (expression -> expression DIVIDE expression .)
-    INF             reduce using rule 14 (expression -> expression DIVIDE expression .)
-    SUP             reduce using rule 14 (expression -> expression DIVIDE expression .)
-    EQUALS          reduce using rule 14 (expression -> expression DIVIDE expression .)
-    SEMICOLON       reduce using rule 14 (expression -> expression DIVIDE expression .)
-
-  ! PLUS            [ shift and go to state 31 ]
-  ! TIMES           [ shift and go to state 32 ]
-  ! MINUS           [ shift and go to state 33 ]
-  ! DIVIDE          [ shift and go to state 34 ]
-  ! AND             [ shift and go to state 35 ]
-  ! OR              [ shift and go to state 36 ]
-  ! INF             [ shift and go to state 37 ]
-  ! SUP             [ shift and go to state 38 ]
-  ! EQUALS          [ shift and go to state 39 ]
+    LACCOLADE       shift and go to state 65
 
 
 state 49
 
-    (15) expression -> expression AND expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (8) statement -> FOR LPAREN statement SEMICOLON . expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
+    (17) expression -> . expression PLUS expression
+    (18) expression -> . expression TIMES expression
+    (19) expression -> . expression MINUS expression
+    (20) expression -> . expression DIVIDE expression
+    (21) expression -> . expression AND expression
+    (22) expression -> . expression OR expression
+    (23) expression -> . expression INF expression
+    (24) expression -> . expression SUP expression
+    (25) expression -> . expression EQUALS expression
+    (26) expression -> . LPAREN expression RPAREN
+    (27) expression -> . NUMBER
+    (28) expression -> . NAME
+    (29) expression -> . TRUE
+    (30) expression -> . FALSE
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for INF resolved as shift
-  ! shift/reduce conflict for SUP resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-    RPAREN          reduce using rule 15 (expression -> expression AND expression .)
-    SEMICOLON       reduce using rule 15 (expression -> expression AND expression .)
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
+    LPAREN          shift and go to state 20
+    NUMBER          shift and go to state 22
+    NAME            shift and go to state 23
+    TRUE            shift and go to state 24
+    FALSE           shift and go to state 25
 
-  ! PLUS            [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! TIMES           [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! MINUS           [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! DIVIDE          [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! AND             [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! OR              [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! INF             [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! SUP             [ reduce using rule 15 (expression -> expression AND expression .) ]
-  ! EQUALS          [ reduce using rule 15 (expression -> expression AND expression .) ]
-
+    expression                     shift and go to state 66
 
 state 50
 
-    (16) expression -> expression OR expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (9) multiname -> NAME . VIRG multiname
+    (10) multiname -> NAME .
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for INF resolved as shift
-  ! shift/reduce conflict for SUP resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-    RPAREN          reduce using rule 16 (expression -> expression OR expression .)
-    SEMICOLON       reduce using rule 16 (expression -> expression OR expression .)
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
-
-  ! PLUS            [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! TIMES           [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! MINUS           [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! DIVIDE          [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! AND             [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! OR              [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! INF             [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! SUP             [ reduce using rule 16 (expression -> expression OR expression .) ]
-  ! EQUALS          [ reduce using rule 16 (expression -> expression OR expression .) ]
+    VIRG            shift and go to state 67
+    RPAREN          reduce using rule 10 (multiname -> NAME .)
 
 
 state 51
 
-    (17) expression -> expression INF expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (13) statement -> FUNCTION NAME LPAREN RPAREN . LACCOLADE bloc RACCOLADE
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for INF resolved as shift
-  ! shift/reduce conflict for SUP resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-    RPAREN          reduce using rule 17 (expression -> expression INF expression .)
-    SEMICOLON       reduce using rule 17 (expression -> expression INF expression .)
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
-
-  ! PLUS            [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! TIMES           [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! MINUS           [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! DIVIDE          [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! AND             [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! OR              [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! INF             [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! SUP             [ reduce using rule 17 (expression -> expression INF expression .) ]
-  ! EQUALS          [ reduce using rule 17 (expression -> expression INF expression .) ]
+    LACCOLADE       shift and go to state 68
 
 
 state 52
 
-    (18) expression -> expression SUP expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (14) statement -> FUNCTION NAME LPAREN multiname . RPAREN LACCOLADE bloc RACCOLADE
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for INF resolved as shift
-  ! shift/reduce conflict for SUP resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-    RPAREN          reduce using rule 18 (expression -> expression SUP expression .)
-    SEMICOLON       reduce using rule 18 (expression -> expression SUP expression .)
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
-
-  ! PLUS            [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! TIMES           [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! MINUS           [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! DIVIDE          [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! AND             [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! OR              [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! INF             [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! SUP             [ reduce using rule 18 (expression -> expression SUP expression .) ]
-  ! EQUALS          [ reduce using rule 18 (expression -> expression SUP expression .) ]
+    RPAREN          shift and go to state 69
 
 
 state 53
 
-    (19) expression -> expression EQUALS expression .
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (26) expression -> LPAREN expression RPAREN .
+
+    RPAREN          reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    AND             reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    OR              reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    INF             reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    SUP             reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+    VIRG            reduce using rule 26 (expression -> LPAREN expression RPAREN .)
+
+
+state 54
+
+    (17) expression -> expression PLUS expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+    RPAREN          reduce using rule 17 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 17 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 17 (expression -> expression PLUS expression .)
+    AND             reduce using rule 17 (expression -> expression PLUS expression .)
+    OR              reduce using rule 17 (expression -> expression PLUS expression .)
+    INF             reduce using rule 17 (expression -> expression PLUS expression .)
+    SUP             reduce using rule 17 (expression -> expression PLUS expression .)
+    EQUALS          reduce using rule 17 (expression -> expression PLUS expression .)
+    SEMICOLON       reduce using rule 17 (expression -> expression PLUS expression .)
+    VIRG            reduce using rule 17 (expression -> expression PLUS expression .)
+    TIMES           shift and go to state 37
+    DIVIDE          shift and go to state 39
+
+  ! TIMES           [ reduce using rule 17 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 17 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 36 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! AND             [ shift and go to state 40 ]
+  ! OR              [ shift and go to state 41 ]
+  ! INF             [ shift and go to state 42 ]
+  ! SUP             [ shift and go to state 43 ]
+  ! EQUALS          [ shift and go to state 44 ]
+
+
+state 55
+
+    (18) expression -> expression TIMES expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+    RPAREN          reduce using rule 18 (expression -> expression TIMES expression .)
+    PLUS            reduce using rule 18 (expression -> expression TIMES expression .)
+    TIMES           reduce using rule 18 (expression -> expression TIMES expression .)
+    MINUS           reduce using rule 18 (expression -> expression TIMES expression .)
+    DIVIDE          reduce using rule 18 (expression -> expression TIMES expression .)
+    AND             reduce using rule 18 (expression -> expression TIMES expression .)
+    OR              reduce using rule 18 (expression -> expression TIMES expression .)
+    INF             reduce using rule 18 (expression -> expression TIMES expression .)
+    SUP             reduce using rule 18 (expression -> expression TIMES expression .)
+    EQUALS          reduce using rule 18 (expression -> expression TIMES expression .)
+    SEMICOLON       reduce using rule 18 (expression -> expression TIMES expression .)
+    VIRG            reduce using rule 18 (expression -> expression TIMES expression .)
+
+  ! PLUS            [ shift and go to state 36 ]
+  ! TIMES           [ shift and go to state 37 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! DIVIDE          [ shift and go to state 39 ]
+  ! AND             [ shift and go to state 40 ]
+  ! OR              [ shift and go to state 41 ]
+  ! INF             [ shift and go to state 42 ]
+  ! SUP             [ shift and go to state 43 ]
+  ! EQUALS          [ shift and go to state 44 ]
+
+
+state 56
+
+    (19) expression -> expression MINUS expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+    RPAREN          reduce using rule 19 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 19 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 19 (expression -> expression MINUS expression .)
+    AND             reduce using rule 19 (expression -> expression MINUS expression .)
+    OR              reduce using rule 19 (expression -> expression MINUS expression .)
+    INF             reduce using rule 19 (expression -> expression MINUS expression .)
+    SUP             reduce using rule 19 (expression -> expression MINUS expression .)
+    EQUALS          reduce using rule 19 (expression -> expression MINUS expression .)
+    SEMICOLON       reduce using rule 19 (expression -> expression MINUS expression .)
+    VIRG            reduce using rule 19 (expression -> expression MINUS expression .)
+    TIMES           shift and go to state 37
+    DIVIDE          shift and go to state 39
+
+  ! TIMES           [ reduce using rule 19 (expression -> expression MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 19 (expression -> expression MINUS expression .) ]
+  ! PLUS            [ shift and go to state 36 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! AND             [ shift and go to state 40 ]
+  ! OR              [ shift and go to state 41 ]
+  ! INF             [ shift and go to state 42 ]
+  ! SUP             [ shift and go to state 43 ]
+  ! EQUALS          [ shift and go to state 44 ]
+
+
+state 57
+
+    (20) expression -> expression DIVIDE expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+    RPAREN          reduce using rule 20 (expression -> expression DIVIDE expression .)
+    PLUS            reduce using rule 20 (expression -> expression DIVIDE expression .)
+    TIMES           reduce using rule 20 (expression -> expression DIVIDE expression .)
+    MINUS           reduce using rule 20 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 20 (expression -> expression DIVIDE expression .)
+    AND             reduce using rule 20 (expression -> expression DIVIDE expression .)
+    OR              reduce using rule 20 (expression -> expression DIVIDE expression .)
+    INF             reduce using rule 20 (expression -> expression DIVIDE expression .)
+    SUP             reduce using rule 20 (expression -> expression DIVIDE expression .)
+    EQUALS          reduce using rule 20 (expression -> expression DIVIDE expression .)
+    SEMICOLON       reduce using rule 20 (expression -> expression DIVIDE expression .)
+    VIRG            reduce using rule 20 (expression -> expression DIVIDE expression .)
+
+  ! PLUS            [ shift and go to state 36 ]
+  ! TIMES           [ shift and go to state 37 ]
+  ! MINUS           [ shift and go to state 38 ]
+  ! DIVIDE          [ shift and go to state 39 ]
+  ! AND             [ shift and go to state 40 ]
+  ! OR              [ shift and go to state 41 ]
+  ! INF             [ shift and go to state 42 ]
+  ! SUP             [ shift and go to state 43 ]
+  ! EQUALS          [ shift and go to state 44 ]
+
+
+state 58
+
+    (21) expression -> expression AND expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for TIMES resolved as shift
@@ -1233,51 +1204,222 @@ state 53
   ! shift/reduce conflict for INF resolved as shift
   ! shift/reduce conflict for SUP resolved as shift
   ! shift/reduce conflict for EQUALS resolved as shift
-    RPAREN          reduce using rule 19 (expression -> expression EQUALS expression .)
-    SEMICOLON       reduce using rule 19 (expression -> expression EQUALS expression .)
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
+    RPAREN          reduce using rule 21 (expression -> expression AND expression .)
+    SEMICOLON       reduce using rule 21 (expression -> expression AND expression .)
+    VIRG            reduce using rule 21 (expression -> expression AND expression .)
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
 
-  ! PLUS            [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! TIMES           [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! MINUS           [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! DIVIDE          [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! AND             [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! OR              [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! INF             [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! SUP             [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
-  ! EQUALS          [ reduce using rule 19 (expression -> expression EQUALS expression .) ]
+  ! PLUS            [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! TIMES           [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! MINUS           [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! DIVIDE          [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! AND             [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! OR              [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! INF             [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! SUP             [ reduce using rule 21 (expression -> expression AND expression .) ]
+  ! EQUALS          [ reduce using rule 21 (expression -> expression AND expression .) ]
 
 
-state 54
+state 59
 
-    (9) statement -> NAME LPAREN RPAREN LACCOLADE bloc . RACCOLADE
-    (2) bloc -> bloc . statement SEMICOLON
-    (4) statement -> . PRINT LPAREN expression RPAREN
-    (5) statement -> . NAME AFFECT expression
-    (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
-    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (22) expression -> expression OR expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
 
-    RACCOLADE       shift and go to state 58
-    PRINT           shift and go to state 4
-    NAME            shift and go to state 5
-    IF              shift and go to state 6
-    WHILE           shift and go to state 7
-    FOR             shift and go to state 8
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for INF resolved as shift
+  ! shift/reduce conflict for SUP resolved as shift
+  ! shift/reduce conflict for EQUALS resolved as shift
+    RPAREN          reduce using rule 22 (expression -> expression OR expression .)
+    SEMICOLON       reduce using rule 22 (expression -> expression OR expression .)
+    VIRG            reduce using rule 22 (expression -> expression OR expression .)
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
 
-    statement                      shift and go to state 9
+  ! PLUS            [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! TIMES           [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! MINUS           [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! DIVIDE          [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! AND             [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! OR              [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! INF             [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! SUP             [ reduce using rule 22 (expression -> expression OR expression .) ]
+  ! EQUALS          [ reduce using rule 22 (expression -> expression OR expression .) ]
 
-state 55
+
+state 60
+
+    (23) expression -> expression INF expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for INF resolved as shift
+  ! shift/reduce conflict for SUP resolved as shift
+  ! shift/reduce conflict for EQUALS resolved as shift
+    RPAREN          reduce using rule 23 (expression -> expression INF expression .)
+    SEMICOLON       reduce using rule 23 (expression -> expression INF expression .)
+    VIRG            reduce using rule 23 (expression -> expression INF expression .)
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
+
+  ! PLUS            [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! TIMES           [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! MINUS           [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! DIVIDE          [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! AND             [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! OR              [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! INF             [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! SUP             [ reduce using rule 23 (expression -> expression INF expression .) ]
+  ! EQUALS          [ reduce using rule 23 (expression -> expression INF expression .) ]
+
+
+state 61
+
+    (24) expression -> expression SUP expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for INF resolved as shift
+  ! shift/reduce conflict for SUP resolved as shift
+  ! shift/reduce conflict for EQUALS resolved as shift
+    RPAREN          reduce using rule 24 (expression -> expression SUP expression .)
+    SEMICOLON       reduce using rule 24 (expression -> expression SUP expression .)
+    VIRG            reduce using rule 24 (expression -> expression SUP expression .)
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
+
+  ! PLUS            [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! TIMES           [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! MINUS           [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! DIVIDE          [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! AND             [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! OR              [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! INF             [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! SUP             [ reduce using rule 24 (expression -> expression SUP expression .) ]
+  ! EQUALS          [ reduce using rule 24 (expression -> expression SUP expression .) ]
+
+
+state 62
+
+    (25) expression -> expression EQUALS expression .
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for INF resolved as shift
+  ! shift/reduce conflict for SUP resolved as shift
+  ! shift/reduce conflict for EQUALS resolved as shift
+    RPAREN          reduce using rule 25 (expression -> expression EQUALS expression .)
+    SEMICOLON       reduce using rule 25 (expression -> expression EQUALS expression .)
+    VIRG            reduce using rule 25 (expression -> expression EQUALS expression .)
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
+
+  ! PLUS            [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! TIMES           [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! MINUS           [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! DIVIDE          [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! AND             [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! OR              [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! INF             [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! SUP             [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+  ! EQUALS          [ reduce using rule 25 (expression -> expression EQUALS expression .) ]
+
+
+state 63
+
+    (11) multiExpr -> expression VIRG multiExpr .
+
+    RPAREN          reduce using rule 11 (multiExpr -> expression VIRG multiExpr .)
+
+
+state 64
 
     (6) statement -> IF LPAREN expression RPAREN LACCOLADE . bloc RACCOLADE
     (2) bloc -> . bloc statement SEMICOLON
@@ -1287,19 +1429,22 @@ state 55
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    bloc                           shift and go to state 59
+    bloc                           shift and go to state 70
     statement                      shift and go to state 3
 
-state 56
+state 65
 
     (7) statement -> WHILE LPAREN expression RPAREN LACCOLADE . bloc RACCOLADE
     (2) bloc -> . bloc statement SEMICOLON
@@ -1309,52 +1454,89 @@ state 56
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    bloc                           shift and go to state 60
+    bloc                           shift and go to state 71
     statement                      shift and go to state 3
 
-state 57
+state 66
 
     (8) statement -> FOR LPAREN statement SEMICOLON expression . SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (11) expression -> expression . PLUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . MINUS expression
-    (14) expression -> expression . DIVIDE expression
-    (15) expression -> expression . AND expression
-    (16) expression -> expression . OR expression
-    (17) expression -> expression . INF expression
-    (18) expression -> expression . SUP expression
-    (19) expression -> expression . EQUALS expression
+    (17) expression -> expression . PLUS expression
+    (18) expression -> expression . TIMES expression
+    (19) expression -> expression . MINUS expression
+    (20) expression -> expression . DIVIDE expression
+    (21) expression -> expression . AND expression
+    (22) expression -> expression . OR expression
+    (23) expression -> expression . INF expression
+    (24) expression -> expression . SUP expression
+    (25) expression -> expression . EQUALS expression
 
-    SEMICOLON       shift and go to state 61
-    PLUS            shift and go to state 31
-    TIMES           shift and go to state 32
-    MINUS           shift and go to state 33
-    DIVIDE          shift and go to state 34
-    AND             shift and go to state 35
-    OR              shift and go to state 36
-    INF             shift and go to state 37
-    SUP             shift and go to state 38
-    EQUALS          shift and go to state 39
-
-
-state 58
-
-    (9) statement -> NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE .
-
-    SEMICOLON       reduce using rule 9 (statement -> NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE .)
-    RPAREN          reduce using rule 9 (statement -> NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE .)
+    SEMICOLON       shift and go to state 72
+    PLUS            shift and go to state 36
+    TIMES           shift and go to state 37
+    MINUS           shift and go to state 38
+    DIVIDE          shift and go to state 39
+    AND             shift and go to state 40
+    OR              shift and go to state 41
+    INF             shift and go to state 42
+    SUP             shift and go to state 43
+    EQUALS          shift and go to state 44
 
 
-state 59
+state 67
+
+    (9) multiname -> NAME VIRG . multiname
+    (9) multiname -> . NAME VIRG multiname
+    (10) multiname -> . NAME
+
+    NAME            shift and go to state 50
+
+    multiname                      shift and go to state 73
+
+state 68
+
+    (13) statement -> FUNCTION NAME LPAREN RPAREN LACCOLADE . bloc RACCOLADE
+    (2) bloc -> . bloc statement SEMICOLON
+    (3) bloc -> . statement SEMICOLON
+    (4) statement -> . PRINT LPAREN expression RPAREN
+    (5) statement -> . NAME AFFECT expression
+    (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
+
+    PRINT           shift and go to state 4
+    NAME            shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+    FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
+
+    bloc                           shift and go to state 74
+    statement                      shift and go to state 3
+
+state 69
+
+    (14) statement -> FUNCTION NAME LPAREN multiname RPAREN . LACCOLADE bloc RACCOLADE
+
+    LACCOLADE       shift and go to state 75
+
+
+state 70
 
     (6) statement -> IF LPAREN expression RPAREN LACCOLADE bloc . RACCOLADE
     (2) bloc -> bloc . statement SEMICOLON
@@ -1363,19 +1545,22 @@ state 59
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
-    RACCOLADE       shift and go to state 62
+    RACCOLADE       shift and go to state 76
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    statement                      shift and go to state 9
+    statement                      shift and go to state 10
 
-state 60
+state 71
 
     (7) statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc . RACCOLADE
     (2) bloc -> bloc . statement SEMICOLON
@@ -1384,19 +1569,22 @@ state 60
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
-    RACCOLADE       shift and go to state 63
+    RACCOLADE       shift and go to state 77
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    statement                      shift and go to state 9
+    statement                      shift and go to state 10
 
-state 61
+state 72
 
     (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON . statement RPAREN LACCOLADE bloc RACCOLADE
     (4) statement -> . PRINT LPAREN expression RPAREN
@@ -1404,18 +1592,77 @@ state 61
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    statement                      shift and go to state 64
+    statement                      shift and go to state 78
 
-state 62
+state 73
+
+    (9) multiname -> NAME VIRG multiname .
+
+    RPAREN          reduce using rule 9 (multiname -> NAME VIRG multiname .)
+
+
+state 74
+
+    (13) statement -> FUNCTION NAME LPAREN RPAREN LACCOLADE bloc . RACCOLADE
+    (2) bloc -> bloc . statement SEMICOLON
+    (4) statement -> . PRINT LPAREN expression RPAREN
+    (5) statement -> . NAME AFFECT expression
+    (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
+
+    RACCOLADE       shift and go to state 79
+    PRINT           shift and go to state 4
+    NAME            shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+    FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
+
+    statement                      shift and go to state 10
+
+state 75
+
+    (14) statement -> FUNCTION NAME LPAREN multiname RPAREN LACCOLADE . bloc RACCOLADE
+    (2) bloc -> . bloc statement SEMICOLON
+    (3) bloc -> . statement SEMICOLON
+    (4) statement -> . PRINT LPAREN expression RPAREN
+    (5) statement -> . NAME AFFECT expression
+    (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
+
+    PRINT           shift and go to state 4
+    NAME            shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+    FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
+
+    bloc                           shift and go to state 80
+    statement                      shift and go to state 3
+
+state 76
 
     (6) statement -> IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .
 
@@ -1423,7 +1670,7 @@ state 62
     RPAREN          reduce using rule 6 (statement -> IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .)
 
 
-state 63
+state 77
 
     (7) statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .
 
@@ -1431,21 +1678,61 @@ state 63
     RPAREN          reduce using rule 7 (statement -> WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE .)
 
 
-state 64
+state 78
 
     (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement . RPAREN LACCOLADE bloc RACCOLADE
 
-    RPAREN          shift and go to state 65
+    RPAREN          shift and go to state 81
 
 
-state 65
+state 79
+
+    (13) statement -> FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE .
+
+    SEMICOLON       reduce using rule 13 (statement -> FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE .)
+    RPAREN          reduce using rule 13 (statement -> FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE .)
+
+
+state 80
+
+    (14) statement -> FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc . RACCOLADE
+    (2) bloc -> bloc . statement SEMICOLON
+    (4) statement -> . PRINT LPAREN expression RPAREN
+    (5) statement -> . NAME AFFECT expression
+    (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
+    (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
+
+    RACCOLADE       shift and go to state 82
+    PRINT           shift and go to state 4
+    NAME            shift and go to state 5
+    IF              shift and go to state 6
+    WHILE           shift and go to state 7
+    FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
+
+    statement                      shift and go to state 10
+
+state 81
 
     (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN . LACCOLADE bloc RACCOLADE
 
-    LACCOLADE       shift and go to state 66
+    LACCOLADE       shift and go to state 83
 
 
-state 66
+state 82
+
+    (14) statement -> FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE .
+
+    SEMICOLON       reduce using rule 14 (statement -> FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE .)
+    RPAREN          reduce using rule 14 (statement -> FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE .)
+
+
+state 83
 
     (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE . bloc RACCOLADE
     (2) bloc -> . bloc statement SEMICOLON
@@ -1455,19 +1742,22 @@ state 66
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
     statement                      shift and go to state 3
-    bloc                           shift and go to state 67
+    bloc                           shift and go to state 84
 
-state 67
+state 84
 
     (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc . RACCOLADE
     (2) bloc -> bloc . statement SEMICOLON
@@ -1476,19 +1766,22 @@ state 67
     (6) statement -> . IF LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (7) statement -> . WHILE LPAREN expression RPAREN LACCOLADE bloc RACCOLADE
     (8) statement -> . FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE
-    (9) statement -> . NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    (10) statement -> . NAME LPAREN RPAREN
+    (13) statement -> . FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    (14) statement -> . FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    (15) statement -> . NAME LPAREN RPAREN
+    (16) statement -> . NAME LPAREN multiExpr RPAREN
 
-    RACCOLADE       shift and go to state 68
+    RACCOLADE       shift and go to state 85
     PRINT           shift and go to state 4
     NAME            shift and go to state 5
     IF              shift and go to state 6
     WHILE           shift and go to state 7
     FOR             shift and go to state 8
+    FUNCTION        shift and go to state 9
 
-    statement                      shift and go to state 9
+    statement                      shift and go to state 10
 
-state 68
+state 85
 
     (8) statement -> FOR LPAREN statement SEMICOLON expression SEMICOLON statement RPAREN LACCOLADE bloc RACCOLADE .
 
@@ -1498,48 +1791,48 @@ state 68
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for PLUS in state 49 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 49 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 49 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 49 resolved as shift
-WARNING: shift/reduce conflict for AND in state 49 resolved as shift
-WARNING: shift/reduce conflict for OR in state 49 resolved as shift
-WARNING: shift/reduce conflict for INF in state 49 resolved as shift
-WARNING: shift/reduce conflict for SUP in state 49 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 49 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 50 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 50 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 50 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 50 resolved as shift
-WARNING: shift/reduce conflict for AND in state 50 resolved as shift
-WARNING: shift/reduce conflict for OR in state 50 resolved as shift
-WARNING: shift/reduce conflict for INF in state 50 resolved as shift
-WARNING: shift/reduce conflict for SUP in state 50 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 50 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 51 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 51 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 51 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 51 resolved as shift
-WARNING: shift/reduce conflict for AND in state 51 resolved as shift
-WARNING: shift/reduce conflict for OR in state 51 resolved as shift
-WARNING: shift/reduce conflict for INF in state 51 resolved as shift
-WARNING: shift/reduce conflict for SUP in state 51 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 51 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 52 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 52 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 52 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 52 resolved as shift
-WARNING: shift/reduce conflict for AND in state 52 resolved as shift
-WARNING: shift/reduce conflict for OR in state 52 resolved as shift
-WARNING: shift/reduce conflict for INF in state 52 resolved as shift
-WARNING: shift/reduce conflict for SUP in state 52 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 52 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 53 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 53 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 53 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 53 resolved as shift
-WARNING: shift/reduce conflict for AND in state 53 resolved as shift
-WARNING: shift/reduce conflict for OR in state 53 resolved as shift
-WARNING: shift/reduce conflict for INF in state 53 resolved as shift
-WARNING: shift/reduce conflict for SUP in state 53 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 53 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 58 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 58 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 58 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 58 resolved as shift
+WARNING: shift/reduce conflict for AND in state 58 resolved as shift
+WARNING: shift/reduce conflict for OR in state 58 resolved as shift
+WARNING: shift/reduce conflict for INF in state 58 resolved as shift
+WARNING: shift/reduce conflict for SUP in state 58 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 58 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 59 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 59 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 59 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 59 resolved as shift
+WARNING: shift/reduce conflict for AND in state 59 resolved as shift
+WARNING: shift/reduce conflict for OR in state 59 resolved as shift
+WARNING: shift/reduce conflict for INF in state 59 resolved as shift
+WARNING: shift/reduce conflict for SUP in state 59 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 59 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 60 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 60 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 60 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 60 resolved as shift
+WARNING: shift/reduce conflict for AND in state 60 resolved as shift
+WARNING: shift/reduce conflict for OR in state 60 resolved as shift
+WARNING: shift/reduce conflict for INF in state 60 resolved as shift
+WARNING: shift/reduce conflict for SUP in state 60 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 60 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 61 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 61 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 61 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 61 resolved as shift
+WARNING: shift/reduce conflict for AND in state 61 resolved as shift
+WARNING: shift/reduce conflict for OR in state 61 resolved as shift
+WARNING: shift/reduce conflict for INF in state 61 resolved as shift
+WARNING: shift/reduce conflict for SUP in state 61 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 61 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 62 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 62 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 62 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 62 resolved as shift
+WARNING: shift/reduce conflict for AND in state 62 resolved as shift
+WARNING: shift/reduce conflict for OR in state 62 resolved as shift
+WARNING: shift/reduce conflict for INF in state 62 resolved as shift
+WARNING: shift/reduce conflict for SUP in state 62 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 62 resolved as shift
