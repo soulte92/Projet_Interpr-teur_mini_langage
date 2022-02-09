@@ -4,11 +4,15 @@ functions = {}
 def eval_Expr(t):
     if type(t) is int :
         return t
-    elif type(t) is str :
-        return names[t]
+    elif type(t) is str:
+        if t in names:
+            return names[t]
+        return t
 
     if type(t) is tuple:
-        if t[0]== '+':
+        if t[0] ==  "multiExpr":
+            return eval_Expr(t[1])
+        elif t[0]== '+':
             return eval_Expr(t[1]) + eval_Expr(t[2])
         elif t[0]== '-':
             return eval_Expr(t[1]) - eval_Expr(t[2])
@@ -26,6 +30,18 @@ def eval_Expr(t):
             return eval_Expr(t[1]) > eval_Expr(t[2])
         elif t[0]== '==':
             return eval_Expr(t[1]) > eval_Expr(t[2])
+        # elif t[0] == 'incPlus':
+        #     names[t[1]] = names[t[1]] + 1
+        #     return names[t[1]]
+        # elif t[0] == 'incExpr':
+        #     names[t[1]] = names[t[1]] + eval_Expr(t[2])
+        #     return names[t[1]]
+        # elif t[0] == 'decMinus':
+        #     names[t[1]] = names[t[1]] - 1
+        #     return names[t[1]]
+        # elif t[0] == 'decExpr':
+        #     names[t[1]] = names[t[1]] - eval_Expr(t[2])
+        #     return names[t[1]]
 
 def eval_Inst(t): 
     print("eval_Expr= ", t)       
@@ -36,7 +52,18 @@ def eval_Inst(t):
         eval_Inst(t[2])
 
     elif t[0] == 'print':
-        print('print >',eval_Expr(t[1]))
+        if len(t[1]) == 2:
+            print('print >', eval_Expr(t[1]))
+        else:
+            p = t[1]
+            while 1:
+                # print("avant = ",names)
+                if len(p) == 2:
+                    print('print >', eval_Expr(p[1]))
+                    break
+                else:
+                    print('print >', eval_Expr(p[1]))
+                    p = p[2]
 
     elif t[0] == 'affect':
         names[t[1]] = eval_Expr(t[2])
@@ -52,8 +79,14 @@ def eval_Inst(t):
             names[t[1]] = None    
 
     elif t[0] == 'if':
-        if eval_Expr(t[1]):
-            eval_Inst(t[2])
+        if len(t) == 3:
+            if eval_Expr(t[1]):
+                eval_Inst(t[2])
+        else:
+            if eval_Expr(t[1]):
+                eval_Inst(t[2])
+            else:
+                eval_Inst(t[4])
 
     elif t[0] == 'while':
         while bool(eval_Expr(t[1])) == True :
