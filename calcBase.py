@@ -5,6 +5,7 @@
 # -----------------------------------------------------------------------------
 from genereTreeGraphviz2 import printTreeGraph
 import ply.yacc as yacc
+import util_fonctions as uf
 
 reserved = {
     'print' : 'PRINT',
@@ -12,9 +13,11 @@ reserved = {
     'else': 'ELSE',
     'while' : 'WHILE',
     'for' : 'FOR',
-    'function' : 'FUNCTION'
+    'functionVoid' : 'FUNCTIONVOID',
+    'functionValue' : 'FUNCTIONVALUE',
+    'return' : 'RETURN'
 }
-
+ 
 tokens = ['NUMBER','MINUS',
     'PLUS','TIMES','DIVIDE',
     'LPAREN','RPAREN', 'AND', 'OR',
@@ -55,9 +58,6 @@ t_GUILLEMET = r'"'
 # t_PLUSAFFECT = r'\+='
 # t_MINUSAFFECT = r'-='
 
-
-import util_fonctions as uf
-
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'NAME')    # Check for reserved words
@@ -89,7 +89,7 @@ def p_start(p):
     'start : bloc'
     p[0] = ('START',p[1])
     print('Arbre de dérivation = ',p[1])
-    printTreeGraph(p[1])                                                                                                                                                                                                                                                                                               
+    # printTreeGraph(p[1])                                                                                                                                                                                                                                                                                               
     print('CALC> ',uf.eval_Inst(p[1]))
 
 #Excution des bloc ( soit print, soit affect pour le moment)
@@ -103,13 +103,14 @@ def p_bloc(p):
 
 #Affiche la valeur d'une expression
 def p_print(p):
-    '''statement : PRINT LPAREN multiExpr RPAREN'''
+    '''statement : PRINT LPAREN multiExpr RPAREN
+    | PRINT LPAREN callValue RPAREN'''
     # print(p[3])
     p[0] = ('print', p[3])
 
 #Fait un une affection d'une expression dans une variable
 def p_affect(p):
-    'statement : NAME AFFECT expression'
+    '''statement : NAME AFFECT expression'''
     p[0] = ('affect',p[1], p[3])
 
 def p_condition_if(p):
@@ -145,21 +146,41 @@ def p_multiExpr_names(p):
         p[0] = ('multiExpr', p[1])
 
 def p_function(p):
-    '''statement : FUNCTION NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    | FUNCTION NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE'''  
-    if len(p) == 8:
-        p[0] = ('function', p[2], p[6])
-    else:
-        p[0] = ('function', p[2], p[4], p[7])
+    '''statement : FUNCTIONVOID NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
+    | FUNCTIONVOID NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE'''  
+    if len(p) == 8 and p[1] == "functionVoid":
+        p[0] = ('functionVoid', p[2], p[6])
+    elif len(p) > 8 and p[1] == "functionVoid":
+        p[0] = ('functionVoid', p[2], p[4], p[7])
 
-def p_call_func(p):
+    elif len(p) == 11 and p[1] == "functionValue":
+        p[0] = ('functionValue', p[2], p[6], p[8])
+    elif len(p) > 11 and p[1] == "functionValue":
+        p[0] = ('functionValue', p[2], p[4], p[7], p[9])    
+
+def p_call_Void_func(p):
     '''statement : NAME LPAREN RPAREN''' 
-    p[0] = ('call', p[1], 'Empty')
+    p[0] = ('callVoid', p[1], 'Empty')
 
-def p_call_param_func(p):
+def p_call_Void_param_func(p):
     '''statement : NAME LPAREN multiExpr RPAREN''' 
     if len(p) == 5:
-        p[0] = ('callParam', p[1], p[3])    
+        p[0] = ('callVoidParam', p[1], p[3])    
+
+
+def p_call_Value_func(p):
+    '''callValue : NAME LPAREN RPAREN
+    | NAME LPAREN multiExpr RPAREN''' 
+    if len(p) == 5:
+        p[0] = ('callValueParam', p[1], p[3]) 
+    else:
+        p[0] = ('callValue', p[1], 'Empty')
+
+# def p_call_Value_param_func(p):
+#     '''callValue : NAME LPAREN multiExpr RPAREN''' 
+           
 
 #Opération
 def p_expression_binop_plus(p):
@@ -243,29 +264,7 @@ def p_error(p):
 yacc.yacc()
 
 
-# s = input('calc > ')
-# s = 'a = (1+1)+1;'
-# s = 'print(1+2);a=2;print(a);'
-# s='print(1+2);x=4;x=x+1;print(x);'
-#s = 'if(2<4){print(2*3);print(3);};'
-#s = 'x=1;print(x);'
-#s = 'x=1;x=x+1;x=x+1;print(x);'
-#s = 'x=2;while(x<5){x=x+1;print(x);};'
-# s = 'for(x=0;x<11;x=x+1;){print(x);};'
-# s = 'for(i=0; i<10; i=i+1){print(i);};'
-s = 'function carre(a,b){print(a*b);};for(i=0;i<5;i=i+1){print(i);carre(i,i);};print(1+2,"toto", 3+4);if(2<0){print("x");} else{ print("y");};'
-# s = 'a=2;print(a*a);'
-# s = 'carre(a){print(a);};carre(2);'
-# s = 'function carre(a,b){a=1;b=2;print(a+b);};carre(2,1);'
-# s = 'carre();'
-# s = 'carre(a,b);'
-# s = 'function carre(a){a=2;print(a);};carre(1);'
-# s = 'carre(a){a=2;print(a);};carre(1);'
-# s='function carre(){print(2+1);};for(i=0;i<10;i=i+1){carre();};'
-#s = 'while(5){print(1);};'
-# s = 'x=5;while(x<8){print(2+9);};'
-#s = 'x=1+2;print(x);'
-# s = 'if(2<0){print("x");} else{ print("a");};'
-yacc.parse(s)
+
+
 
 
