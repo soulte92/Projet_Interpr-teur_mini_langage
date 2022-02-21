@@ -12,7 +12,6 @@ def eval_Expr(t):
         return t
     elif type(t) is list:
         eval_Inst(t[1])
-        print("########", t[1])
 
         return eval_Expr(t[2])
 
@@ -63,6 +62,7 @@ def eval_Inst(t):
             print('print > ',eval_Expr(list(functions_values[t[1][1]])))
         
         elif t[1][0] == 'callValueParam':
+            #callvalue tuple
             new_t = t[1]
             #Fonction content
             our_function = functions_values[new_t[1]][1]
@@ -72,7 +72,7 @@ def eval_Inst(t):
                 if len(p) == 2 and len(new_t[2]) == 2:
                     names[p[1]] = eval_Expr(new_t[2][1])
                     #functions_values[new_t[1]] Return fonction dict tuple
-                    print('print > ',eval_Expr(list(functions_values[new_t[1]])))
+                    print('print > ',eval_Expr(list(functions_values[t[1][1]])))
                     break
                 elif len(p) == len(new_t[2]) and len(p)>=3:
                     names[p[1]] = eval_Expr(new_t[2][1])
@@ -131,8 +131,7 @@ def eval_Inst(t):
         else:
             #avec param
             functions_void[t[1]] = (t[2],t[3]) 
-            eval_Inst(t[2])
-        print("function void:",functions_void)  
+            eval_Inst(t[2])  
 
     elif t[0] == 'functionValue':
         if len(t) == 4:
@@ -141,8 +140,7 @@ def eval_Inst(t):
         else:
             #avec param
             functions_values[t[1]] = (t[2],t[3], t[4]) 
-            eval_Inst(t[2])   
-        print("function values:",functions_values[t[1]])  
+            eval_Inst(t[2])
 
     elif t[0] == 'callVoid':
         if t[1] in functions_void:

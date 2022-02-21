@@ -145,20 +145,34 @@ def p_multiExpr_names(p):
     else:
         p[0] = ('multiExpr', p[1])
 
-def p_function(p):
+def p_function_void(p):
     '''statement : FUNCTIONVOID NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    | FUNCTIONVOID NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE'''  
-    if len(p) == 8 and p[1] == "functionVoid":
-        p[0] = ('functionVoid', p[2], p[6])
-    elif len(p) > 8 and p[1] == "functionVoid":
-        p[0] = ('functionVoid', p[2], p[4], p[7])
+    | FUNCTIONVOID NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE'''
 
-    elif len(p) == 11 and p[1] == "functionValue":
+    if len(p) == 8 :
+        p[0] = ('functionVoid', p[2], p[6])
+    else:
+        p[0] = ('functionVoid', p[2], p[4], p[7])
+  
+
+def p_function_value(p):
+    '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE'''  
+    #function value sans param sans bloc et avec return
+    if len(p) == 10 and p[6] == "return":
+        p[0] = ('functionValue', p[2], 'Empty', p[7])
+    #function value avec param avec bloc et avec return
+    elif len(p) == 11 and p[7] == "return" and p[6] == '{':
+        p[0] = ('functionValue', p[2], p[4], 'Empty', p[8]) 
+    #function value sans param avec bloc et avec return
+    elif len(p) == 11 and p[7] == 'return' and p[5] == '{':
         p[0] = ('functionValue', p[2], p[6], p[8])
-    elif len(p) > 11 and p[1] == "functionValue":
-        p[0] = ('functionValue', p[2], p[4], p[7], p[9])    
+    #function value avec param avec bloc et avec return
+    elif len(p) == 12 and p[8] ==  'return':
+        p[0] = ('functionValue', p[2], p[4], p[7], p[9])
+    
 
 def p_call_Void_func(p):
     '''statement : NAME LPAREN RPAREN''' 
