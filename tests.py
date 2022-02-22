@@ -24,9 +24,9 @@ import calcBase as cb
 # s = 'if(2<0){print("x");} else{ print("a");};'
 
 """ Functions without return """
-# s = 'functionVoid carre(){print(2+1);};for(i=0;i<10;i=i+1){carre();};'
+# s = 'functionVoid carre(){print(2+1);return;};for(i=0;i<10;i=i+1){carre();};'
 
-# s = 'functionVoid carre(a,b){a=1;b=2;print(a+b);};carre(2,1);'
+s = 'functionVoid carre(a,b){a=1;b=2;print(a+b);};carre(2,1);'
 
 # s = 'functionVoid carre(a,b){print(a*b);};for(i=0;i<5;i=i+1){print(i);carre(i,i);};print(1+2,"toto", 3+4);if(2<0){print("x");} else{ print("y");};'
 

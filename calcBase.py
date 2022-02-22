@@ -146,9 +146,11 @@ def p_multiExpr_names(p):
 
 def p_function_void(p):
     '''statement : FUNCTIONVOID NAME LPAREN RPAREN LACCOLADE bloc RACCOLADE
-    | FUNCTIONVOID NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE'''
+    | FUNCTIONVOID NAME LPAREN RPAREN LACCOLADE bloc RETURN SEMICOLON RACCOLADE
+    | FUNCTIONVOID NAME LPAREN multiname RPAREN LACCOLADE bloc RACCOLADE
+    | FUNCTIONVOID NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN SEMICOLON RACCOLADE'''
 
-    if len(p) == 8 :
+    if len(p) == 10 or len(p) == 8 :
         p[0] = ('functionVoid', p[2], p[6])
     else:
         p[0] = ('functionVoid', p[2], p[4], p[7])
