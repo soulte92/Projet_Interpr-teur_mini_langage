@@ -103,8 +103,7 @@ def p_bloc(p):
 
 #Affiche la valeur d'une expression
 def p_print(p):
-    '''statement : PRINT LPAREN multiExpr RPAREN
-    | PRINT LPAREN callValue RPAREN'''
+    '''statement : PRINT LPAREN multiExpr RPAREN'''
     # print(p[3])
     p[0] = ('print', p[3])
 
@@ -156,10 +155,10 @@ def p_function_void(p):
   
 
 def p_function_value(p):
-    '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE'''  
+    '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE'''  
     #function value sans param sans bloc et avec return
     if len(p) == 10 and p[6] == "return":
         p[0] = ('functionValue', p[2], 'Empty', p[7])
@@ -173,6 +172,43 @@ def p_function_value(p):
     elif len(p) == 12 and p[8] ==  'return':
         p[0] = ('functionValue', p[2], p[4], p[7], p[9])
     
+ #Function with return with break on return    
+def p_function_value_return(p):
+    '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE RETURN expression SEMICOLON bloc RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE RETURN expression SEMICOLON bloc RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON bloc RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON bloc RACCOLADE'''  
+    #function value sans param sans bloc et avec return
+    if len(p) == 11 and p[6] == "return":
+        p[0] = ('functionValue', p[2], 'Empty', p[7])
+    #function value avec param avec bloc et avec return
+    elif len(p) == 12 and p[7] == "return" and p[6] == '{':
+        p[0] = ('functionValue', p[2], p[4], 'Empty', p[8]) 
+    #function value sans param avec bloc et avec return
+    elif len(p) == 12 and p[7] == 'return' and p[5] == '{':
+        p[0] = ('functionValue', p[2], p[6], p[8])
+    #function value avec param avec bloc et avec return
+    elif len(p) == 13 and p[8] ==  'return':
+        p[0] = ('functionValue', p[2], p[4], p[7], p[9])
+
+# Return with implicit
+def p_function_value_return_implicite(p):
+    '''statement : FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc NAME AFFECT expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc NAME AFFECT expression SEMICOLON bloc RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE NAME AFFECT expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE NAME AFFECT expression SEMICOLON bloc RACCOLADE'''
+    if len(p) == 13 and p[9] ==  '=' and p[8] == p[2]:
+        p[0] = ('functionValue', p[2], p[4], p[7], p[10] )
+
+    elif len(p) == 14 and p[9] ==  '=' and p[8] == p[2]:
+        p[0] = ('functionValue', p[2], p[4], p[7], p[10] )
+
+    elif len(p) == 12 and p[8] ==  '=' and p[7] == p[2]:
+        p[0] = ('functionValue', p[2], p[4],'Empty', p[9] )
+
+    elif len(p) == 13 and p[8] ==  '=' and p[7] == p[2]:
+        p[0] = ('functionValue', p[2], p[4],'Empty', p[9] )
+
 
 def p_call_Void_func(p):
     '''statement : NAME LPAREN RPAREN''' 
@@ -191,10 +227,7 @@ def p_call_Value_func(p):
         p[0] = ('callValueParam', p[1], p[3]) 
     else:
         p[0] = ('callValue', p[1], 'Empty')
-
-# def p_call_Value_param_func(p):
-#     '''callValue : NAME LPAREN multiExpr RPAREN''' 
-           
+   
 
 #Opération
 def p_expression_binop_plus(p):
@@ -255,6 +288,10 @@ def p_expression_group(p):
 def p_expression_number(p):
     'expression : NUMBER'
     p[0] = p[1]
+
+def p_expression_callValue(p):
+    'expression : callValue'
+    p[0] = p[1]    
 
 def p_expression_name(p):
     '''expression : NAME

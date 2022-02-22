@@ -17,7 +17,28 @@ def eval_Expr(t):
 
     if type(t) is tuple:
         if t[0] ==  "multiExpr":
-            return eval_Expr(t[1])  
+            return eval_Expr(t[1]) 
+
+        elif t[0] == 'callValue' :
+            eval_Inst(functions_values[t[1]][1])
+            return eval_Expr(functions_values[t[1]][2])
+
+        elif t[0] == 'callValueParam':
+            #Fonction content
+            our_function = functions_values[t[1]][1]
+            return_value = functions_values[t[1]][2]
+            #Les paramètres de la function
+            p = functions_values[t[1]][0]
+            while len(t[2])!= 1 and len(p)!=1:
+                if len(p) == 2 and len(t[2]) == 2:
+                    names[p[1]] = eval_Expr(t[2][1])
+                    #functions_values[new_t[1]] Return fonction dict tuple
+                    eval_Inst(our_function)
+                    return eval_Expr(return_value)
+                elif len(p) == len(t[2]) and len(p)>=3:
+                    names[p[1]] = eval_Expr(t[2][1])
+                    t = t[2]
+                    p = p[2]     
         elif t[0]== '+':
             return eval_Expr(t[1]) + eval_Expr(t[2])
         elif t[0]== '-':
@@ -51,34 +72,14 @@ def eval_Expr(t):
 
 def eval_Inst(t): 
     print("eval_Expr= ", t)       
-    if t == 'Empty':
+    if t == 'Empty' or t is None:
         return
     elif t[0] == 'bloc':
         eval_Inst(t[1])
         eval_Inst(t[2])
 
     elif t[0] == 'print':
-        if t[1][0] == 'callValue' :
-            print('print > ',eval_Expr(list(functions_values[t[1][1]])))
-        
-        elif t[1][0] == 'callValueParam':
-            #callvalue tuple
-            new_t = t[1]
-            #Fonction content
-            our_function = functions_values[new_t[1]][1]
-            #Les paramètres de la function
-            p = functions_values[new_t[1]][0]
-            while len(new_t[2])!= 1 and len(p)!=1:
-                if len(p) == 2 and len(new_t[2]) == 2:
-                    names[p[1]] = eval_Expr(new_t[2][1])
-                    #functions_values[new_t[1]] Return fonction dict tuple
-                    print('print > ',eval_Expr(list(functions_values[t[1][1]])))
-                    break
-                elif len(p) == len(new_t[2]) and len(p)>=3:
-                    names[p[1]] = eval_Expr(new_t[2][1])
-                    new_t = new_t[2]
-                    p = p[2]
-        elif len(t[1]) == 2:
+        if len(t[1]) == 2:
             print('print >', eval_Expr(t[1]))
         else:
             p = t[1]
@@ -92,7 +93,6 @@ def eval_Inst(t):
 
     elif t[0] == 'affect':
         names[t[1]] = eval_Expr(t[2])
-        print(names)
 
     elif t[0] == 'multiname':
         #on vient de functions_void
