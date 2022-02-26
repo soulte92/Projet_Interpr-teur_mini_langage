@@ -15,6 +15,7 @@ reserved = {
     'for' : 'FOR',
     'functionVoid' : 'FUNCTIONVOID',
     'functionValue' : 'FUNCTIONVALUE',
+    'functionValueImp':'FUNCTIONVALUEIMP',
     'return' : 'RETURN'
 }
  
@@ -154,62 +155,77 @@ def p_function_void(p):
         p[0] = ('functionVoid', p[2], p[6])
     else:
         p[0] = ('functionVoid', p[2], p[4], p[7])
-  
 
 def p_function_value(p):
-    '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE RETURN expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON RACCOLADE'''  
-    #function value sans param sans bloc et avec return
-    if len(p) == 10 and p[6] == "return":
-        p[0] = ('functionValue', p[2], 'Empty', p[7])
-    #function value avec param avec bloc et avec return
-    elif len(p) == 11 and p[7] == "return" and p[6] == '{':
-        p[0] = ('functionValue', p[2], p[4], 'Empty', p[8]) 
-    #function value sans param avec bloc et avec return
-    elif len(p) == 11 and p[7] == 'return' and p[5] == '{':
-        p[0] = ('functionValue', p[2], p[6], p[8])
-    #function value avec param avec bloc et avec return
-    elif len(p) == 12 and p[8] ==  'return':
-        p[0] = ('functionValue', p[2], p[4], p[7], p[9])
-    
- #Function with return with break on return    
-def p_function_value_return(p):
-    '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE RETURN expression SEMICOLON bloc RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE RETURN expression SEMICOLON bloc RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE bloc RETURN expression SEMICOLON bloc RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc RETURN expression SEMICOLON bloc RACCOLADE'''  
-    #function value sans param sans bloc et avec return
-    if len(p) == 11 and p[6] == "return":
-        p[0] = ('functionValue', p[2], 'Empty', p[7])
-    #function value avec param avec bloc et avec return
-    elif len(p) == 12 and p[7] == "return" and p[6] == '{':
-        p[0] = ('functionValue', p[2], p[4], 'Empty', p[8]) 
-    #function value sans param avec bloc et avec return
-    elif len(p) == 12 and p[7] == 'return' and p[5] == '{':
-        p[0] = ('functionValue', p[2], p[6], p[8])
-    #function value avec param avec bloc et avec return
-    elif len(p) == 13 and p[8] ==  'return':
-        p[0] = ('functionValue', p[2], p[4], p[7], p[9])
+    '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE func_instrs RACCOLADE
+    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE func_instrs RACCOLADE'''
+     # Tuple format: ('functionValue', funcname, params, bloc, return)     
+    print("####", p[1])
+    #function value sans param
+    if len(p) == 8 and p[1] == 'functionValue' :
+        p[0] = ('functionValue', p[2], p[6][0], p[6][1])
+            #function value avec param 
+    elif len(p) == 9 and p[1] == 'functionValue':
+        p[0] = ('functionValue', p[2], p[4], p[7][0], p[7][1]) 
+            
+   
+# def p_function_value_imp(p):
+#     '''statement : FUNCTIONVALUEIMP NAME LPAREN  RPAREN LACCOLADE func_instrs RACCOLADE
+#     | FUNCTIONVALUEIMP NAME LPAREN multiname RPAREN LACCOLADE func_instrs RACCOLADE'''  
+     
+#     if len(p) == 8 and p[1] == 'functionValueImp':
+#         if p[6][2] == p[2]:
+#             p[0] = ('functionValueImp', p[2], p[6][0], p[6][1])
+#         else:
+#             print("Error, function definition invalid because we have functionVoid instructions instead of functionValue instrutions")
+#     elif len(p) == 9 and p[1] == 'functionValueImp':
+#         if p[7][2] == p[2]:
+#             p[0] = ('functionValueImp', p[2], p[7][0], p[7][1])
+#         else:
+#             print("Error, function definition invalid because we have functionVoid instructions instead of functionValue instrutions")
+
+def p_function_value_instruction(p):
+    '''func_instrs : RETURN expression SEMICOLON
+    | bloc RETURN expression SEMICOLON
+    | RETURN expression SEMICOLON bloc
+    | bloc RETURN expression SEMICOLON bloc'''
+
+    # Tuple format: (bloc, return) 
+    # return empty
+    if len(p) == 4:
+        print("#####2")
+        p[0] = ('Empty',p[2])
+    # bloc return empty
+    elif len(p) == 5 and p[2] == 'return':
+        print("#####2")
+        p[0] = (p[1], p[3])  
+    # empty return bloc     
+    elif len(p) == 5 and p[1] == 'return':
+        print("#####2")
+        p[0] = ('Empty',p[2])
+    # bloc return bloc 
+    elif len(p) == 6 and p[2] == 'return':
+        print("#####2")
+        p[0] = (p[1], p[3])
+
 
 # Return with implicit
 def p_function_value_return_implicite(p):
-    '''statement : FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc NAME AFFECT expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE bloc NAME AFFECT expression SEMICOLON bloc RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE NAME AFFECT expression SEMICOLON RACCOLADE
-    | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE NAME AFFECT expression SEMICOLON bloc RACCOLADE'''
+    '''statement : FUNCTIONVALUEIMP NAME LPAREN multiname RPAREN LACCOLADE bloc NAME AFFECT expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUEIMP NAME LPAREN multiname RPAREN LACCOLADE bloc NAME AFFECT expression SEMICOLON bloc RACCOLADE
+    | FUNCTIONVALUEIMP NAME LPAREN multiname RPAREN LACCOLADE NAME AFFECT expression SEMICOLON RACCOLADE
+    | FUNCTIONVALUEIMP NAME LPAREN multiname RPAREN LACCOLADE NAME AFFECT expression SEMICOLON bloc RACCOLADE'''
     if len(p) == 13 and p[9] ==  '=' and p[8] == p[2]:
-        p[0] = ('functionValue', p[2], p[4], p[7], p[10] )
+        p[0] = ('functionValueImp', p[2], p[4], p[7], p[10] )
 
     elif len(p) == 14 and p[9] ==  '=' and p[8] == p[2]:
-        p[0] = ('functionValue', p[2], p[4], p[7], p[10] )
+        p[0] = ('functionValueImp', p[2], p[4], p[7], p[10] )
 
     elif len(p) == 12 and p[8] ==  '=' and p[7] == p[2]:
-        p[0] = ('functionValue', p[2], p[4],'Empty', p[9] )
+        p[0] = ('functionValueImp', p[2], p[4],'Empty', p[9] )
 
     elif len(p) == 13 and p[8] ==  '=' and p[7] == p[2]:
-        p[0] = ('functionValue', p[2], p[4],'Empty', p[9] )
+        p[0] = ('functionValueImp', p[2], p[4],'Empty', p[9] )
 
 
 def p_call_Void_func(p):
@@ -225,6 +241,7 @@ def p_call_Void_param_func(p):
 def p_call_Value_func(p):
     '''callValue : NAME LPAREN RPAREN
     | NAME LPAREN multiExpr RPAREN''' 
+    print("--------")
     if len(p) == 5:
         p[0] = ('callValueParam', p[1], p[3]) 
     else:

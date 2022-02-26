@@ -142,6 +142,15 @@ def eval_Inst(t):
             functions_values[t[1]] = (t[2],t[3], t[4]) 
             eval_Inst(t[2])
 
+    elif t[0] == 'functionValueImp':
+        if len(t) == 4:
+            #sans param
+            functions_values[t[1]] = ('Empty',t[2], t[3]) 
+        else:
+            #avec param
+            functions_values[t[1]] = (t[2],t[3], t[4]) 
+            eval_Inst(t[2])        
+
     elif t[0] == 'callVoid':
         if t[1] in functions_void:
             eval_Inst(functions_void[t[1]][1])
