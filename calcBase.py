@@ -84,6 +84,8 @@ def t_error(t):
 import ply.lex as lex
 lex.lex()
 
+names = {}
+scope_func = {}
 
 #Début d'exécution des règles
 def p_start(p):
@@ -91,7 +93,7 @@ def p_start(p):
     p[0] = ('START',p[1])
     print('Arbre de dérivation = ',p[1])
     # printTreeGraph(p[1])                                                                                                                                                                                                                                                                                               
-    print('CALC> ',uf.eval_Inst(p[1]))
+    uf.eval_Inst(p[1], names, scope_func)
 
 #Excution des bloc ( soit print, soit affect pour le moment)
 def p_bloc(p):
@@ -105,7 +107,6 @@ def p_bloc(p):
 #Affiche la valeur d'une expression
 def p_print(p):
     '''statement : PRINT LPAREN multiExpr RPAREN'''
-    # print(p[3])
     p[0] = ('print', p[3])
 
 #Fait un une affection d'une expression dans une variable
@@ -160,7 +161,6 @@ def p_function_value(p):
     '''statement : FUNCTIONVALUE NAME LPAREN RPAREN LACCOLADE func_instrs RACCOLADE
     | FUNCTIONVALUE NAME LPAREN multiname RPAREN LACCOLADE func_instrs RACCOLADE'''
      # Tuple format: ('functionValue', funcname, params, bloc, return)     
-    print("####", p[1])
     #function value sans param
     if len(p) == 8 and p[1] == 'functionValue' :
         p[0] = ('functionValue', p[2], p[6][0], p[6][1])
@@ -168,21 +168,6 @@ def p_function_value(p):
     elif len(p) == 9 and p[1] == 'functionValue':
         p[0] = ('functionValue', p[2], p[4], p[7][0], p[7][1]) 
             
-   
-# def p_function_value_imp(p):
-#     '''statement : FUNCTIONVALUEIMP NAME LPAREN  RPAREN LACCOLADE func_instrs RACCOLADE
-#     | FUNCTIONVALUEIMP NAME LPAREN multiname RPAREN LACCOLADE func_instrs RACCOLADE'''  
-     
-#     if len(p) == 8 and p[1] == 'functionValueImp':
-#         if p[6][2] == p[2]:
-#             p[0] = ('functionValueImp', p[2], p[6][0], p[6][1])
-#         else:
-#             print("Error, function definition invalid because we have functionVoid instructions instead of functionValue instrutions")
-#     elif len(p) == 9 and p[1] == 'functionValueImp':
-#         if p[7][2] == p[2]:
-#             p[0] = ('functionValueImp', p[2], p[7][0], p[7][1])
-#         else:
-#             print("Error, function definition invalid because we have functionVoid instructions instead of functionValue instrutions")
 
 def p_function_value_instruction(p):
     '''func_instrs : RETURN expression SEMICOLON
@@ -193,19 +178,15 @@ def p_function_value_instruction(p):
     # Tuple format: (bloc, return) 
     # return empty
     if len(p) == 4:
-        print("#####2")
         p[0] = ('Empty',p[2])
     # bloc return empty
     elif len(p) == 5 and p[2] == 'return':
-        print("#####2")
         p[0] = (p[1], p[3])  
     # empty return bloc     
     elif len(p) == 5 and p[1] == 'return':
-        print("#####2")
         p[0] = ('Empty',p[2])
     # bloc return bloc 
     elif len(p) == 6 and p[2] == 'return':
-        print("#####2")
         p[0] = (p[1], p[3])
 
 
@@ -241,7 +222,6 @@ def p_call_Void_param_func(p):
 def p_call_Value_func(p):
     '''callValue : NAME LPAREN RPAREN
     | NAME LPAREN multiExpr RPAREN''' 
-    print("--------")
     if len(p) == 5:
         p[0] = ('callValueParam', p[1], p[3]) 
     else:
@@ -284,20 +264,6 @@ def p_expression_binop_comparison(p):
 def p_expression_binop_equals(p):
     '''expression : expression EQUALS expression'''
     p[0] = ('==', p[1] , p[3])
-
-# def p_incrementation(p):
-#     '''expression : NAME PLUSPLUS 
-#     | NAME PLUSAFFECT expression
-#     | NAME MINUSMINUS 
-#     | NAME MINUSAFFECT expression'''
-#     if p[2] == '++':
-#         p[0] = ('incPlus', p[1])
-#     elif p[2] == '+=':
-#         p[0] = ('incExpr', p[1], p[3])
-#     elif p[2] == '--':
-#         p[0] = ('decMinus', p[1])
-#     elif p[2] == '-=':
-#         p[0] = ('decExpr', p[1], p[3])
 
 #Element terminaux    
 def p_expression_group(p):
